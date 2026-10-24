@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy Policy · CalWidget</title>
+  <meta name="description" content="Privacy policy for CalWidget, a macOS widget for Google Calendar. Your data stays on your Mac.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/"><img src="favicon.svg" alt="">CalWidget</a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/support">Support</a>
+        <a href="/privacy" aria-current="page">Privacy</a>
+        <a href="https://github.com/Hitjack007/googleCalendarWidget">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <h1>Privacy Policy</h1>
+      <p class="meta"><strong>CalWidget</strong><br>Last updated: 25 October 2026</p>
+
+      <p>This policy explains what CalWidget ("the app") does with your data.</p>
+      <div class="callout">
+        <p>The short version: <strong>your data stays on your Mac. We don't collect it, store it, or see it.</strong></p>
+      </div>
+
+      <h2>Who we are</h2>
+      <p>The app is a free, open-source project by Hitjack007 (<a href="https://github.com/Hitjack007">github.com/Hitjack007</a>). Contact: <a href="mailto:hitjack007.master@gmail.com">hitjack007.master@gmail.com</a>.</p>
+
+      <h2>What Google user data the app accesses</h2>
+      <p>When you sign in with Google, the app requests one permission (OAuth scope):</p>
+      <ul>
+        <li><code>https://www.googleapis.com/auth/calendar.readonly</code>: read-only access to your Google Calendar.</li>
+      </ul>
+      <p>With it, the app requests your calendar list and the events for the month being shown. From Google's response, the app keeps and uses only:</p>
+      <ul>
+        <li>from your <strong>calendar list</strong>: each calendar's name and color</li>
+        <li>from the <strong>events</strong> in the calendars you choose to show: title, start and end date and time, and whether it's an all-day event</li>
+      </ul>
+      <p>Anything else Google returns, such as event descriptions, locations, or guest lists, is discarded immediately and never stored.</p>
+      <p>The app can't create, modify, or delete anything in your calendar. It doesn't access your Gmail, contacts, Drive, or any other Google data.</p>
+
+      <h2>How the app uses Google user data</h2>
+      <p>Calendar data is used only to display your events in the widget and in the app's window on your own Mac. It isn't used for anything else: not for advertising, not for profiling, not for analytics, and not to train AI or machine-learning models.</p>
+
+      <h2>How the app stores Google user data</h2>
+      <ul>
+        <li>Event and calendar data is cached locally on your Mac, in a container shared only between the app and its widget, so the widget can display it.</li>
+        <li>Your Google sign-in tokens are stored in the macOS Keychain.</li>
+        <li>Nothing is stored anywhere other than your Mac. We don't run any servers, so there is no copy on our side.</li>
+      </ul>
+
+      <h2>How Google user data is shared</h2>
+      <p><strong>It isn't.</strong> Your Mac talks directly to Google's servers, with no server run by us in between. We don't sell, share, transfer, or disclose Google user data to anyone, and we never receive it ourselves. We run no analytics, advertising, crash reporting, or tracking of any kind.</p>
+
+      <h2>How your data is protected</h2>
+      <ul>
+        <li>All communication with Google uses encrypted HTTPS connections.</li>
+        <li>Sign-in tokens are kept in the macOS Keychain, which encrypts them and limits access to this app.</li>
+        <li>Cached calendar data stays inside the app's sandboxed container on your Mac.</li>
+        <li>Nobody reads your data. It never leaves your Mac except to and from Google.</li>
+      </ul>
+
+      <h2>Google sign-in</h2>
+      <p>The app signs in through Google's own sign-in page. Google shows you exactly what the app is asking for before you agree, and you can say no. Your password is entered only on Google's page and is never seen by the app or by us.</p>
+
+      <h2>Google API Services User Data Policy</h2>
+      <p>CalWidget's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>, including the Limited Use requirements.</p>
+
+      <h2>Retention and deletion</h2>
+      <ul>
+        <li><strong>Remove the cached data:</strong> quit the app and delete it. Choose "Sign out" in the app to clear the local cache and stored tokens.</li>
+        <li><strong>Revoke access at any time:</strong> visit <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>, select the app, and choose "Remove access".</li>
+      </ul>
+      <p>Because we hold no copy of your data, there is nothing for us to delete on our side.</p>
+
+      <h2>Children</h2>
+      <p>The app isn't directed at children under 13, and we don't knowingly collect any data from anyone.</p>
+
+      <h2>Changes</h2>
+      <p>If this policy changes, the updated version will be posted here with a new date. The full history is in the project's GitHub repository.</p>
+
+      <h2>Contact</h2>
+      <p>Questions about this policy: <a href="mailto:hitjack007.master@gmail.com">hitjack007.master@gmail.com</a> or open an issue at <a href="https://github.com/Hitjack007/googleCalendarWidget/issues">github.com/Hitjack007/googleCalendarWidget/issues</a>.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <nav aria-label="Footer">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/support">Support</a>
+        <a href="https://github.com/Hitjack007/googleCalendarWidget">Source code on GitHub</a>
+      </nav>
+      <p>This project is not affiliated with or endorsed by Google. Google Calendar is a trademark of Google LLC.</p>
+    </div>
+  </footer>
+</body>
+</html>

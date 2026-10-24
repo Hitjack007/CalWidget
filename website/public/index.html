@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CalWidget: a month view of your Google Calendar on macOS</title>
+  <meta name="description" content="CalWidget is a free, open-source macOS widget that shows a full month view of your Google Calendar in Notification Center or on your desktop.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/"><img src="favicon.svg" alt="">CalWidget</a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/" aria-current="page">Home</a>
+        <a href="/support">Support</a>
+        <a href="/privacy">Privacy</a>
+        <a href="https://github.com/Hitjack007/googleCalendarWidget">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <span class="free-tag">Free and open source</span>
+        <h1>CalWidget</h1>
+        <p class="lede">A native macOS widget that shows a full month view of your Google Calendar, right in Notification Center or on your desktop. It reads Google Calendar directly, so it doesn't depend on syncing through Apple Calendar.</p>
+        <div class="actions">
+          <a class="button" href="https://github.com/Hitjack007/googleCalendarWidget">Get it on GitHub</a>
+          <a class="button secondary" href="/support">Setup &amp; support</a>
+        </div>
+
+        <div class="widget" aria-hidden="true">
+          <p class="widget-title">October</p>
+          <div class="grid">
+            <span class="dow">S</span><span class="dow">M</span><span class="dow">T</span><span class="dow">W</span><span class="dow">T</span><span class="dow">F</span><span class="dow">S</span>
+            <span class="day muted"></span>
+            <span class="day muted"></span>
+            <span class="day muted"></span>
+            <span class="day muted"></span>
+            <span class="day"><b>1</b></span>
+            <span class="day"><b>2</b><i class="chip c1"></i></span>
+            <span class="day"><b>3</b></span>
+            <span class="day"><b>4</b></span>
+            <span class="day"><b>5</b></span>
+            <span class="day"><b>6</b><i class="chip c2"></i><i class="chip c3"></i></span>
+            <span class="day"><b>7</b></span>
+            <span class="day"><b>8</b></span>
+            <span class="day"><b>9</b><i class="chip c1"></i></span>
+            <span class="day"><b>10</b></span>
+            <span class="day"><b>11</b></span>
+            <span class="day"><b>12</b></span>
+            <span class="day"><b>13</b><i class="chip c4"></i></span>
+            <span class="day"><b>14</b><i class="chip c2"></i></span>
+            <span class="day"><b>15</b></span>
+            <span class="day"><b>16</b></span>
+            <span class="day"><b>17</b></span>
+            <span class="day"><b>18</b></span>
+            <span class="day"><b>19</b><i class="chip c3"></i><i class="chip c1"></i></span>
+            <span class="day"><b>20</b></span>
+            <span class="day"><b>21</b></span>
+            <span class="day"><b>22</b><i class="chip c4"></i></span>
+            <span class="day"><b>23</b></span>
+            <span class="day"><b>24</b></span>
+            <span class="day today"><b>25</b><i class="chip c2"></i></span>
+            <span class="day"><b>26</b></span>
+            <span class="day"><b>27</b><i class="chip c1"></i><i class="chip c4"></i></span>
+            <span class="day"><b>28</b></span>
+            <span class="day"><b>29</b></span>
+            <span class="day"><b>30</b><i class="chip c3"></i></span>
+            <span class="day"><b>31</b></span>
+          </div>
+        </div>
+      </section>
+
+      <h2>Features</h2>
+      <ul class="features">
+        <li>Month grid with compact event chips in each day</li>
+        <li>Reads directly from Google Calendar</li>
+        <li>Uses your Google calendar colors</li>
+        <li>Medium and large widget sizes</li>
+        <li>Light and dark mode</li>
+        <li>No account on our side and no tracking. Your data goes only between your Mac and Google</li>
+      </ul>
+
+      <h2>How it works</h2>
+      <ol>
+        <li>Open the app and sign in with your Google account.</li>
+        <li>Add the widget from Edit Widgets in Notification Center or on the desktop.</li>
+        <li>The widget refreshes in the background and shows the current month.</li>
+      </ol>
+      <div class="callout">
+        <p>The app asks only for <strong>read-only</strong> access to your calendar. It can't create, edit, or delete events.</p>
+      </div>
+
+      <h2 id="google-data">Why the app needs access to your Google Calendar</h2>
+      <p>The widget's only job is to show your Google Calendar events in a month grid on your Mac. To do that, it asks Google for one permission, <code>https://www.googleapis.com/auth/calendar.readonly</code>, which lets it:</p>
+      <ul>
+        <li><strong>Read your list of calendars</strong>, with their names and colors, so you can choose which ones to show and each event appears in its calendar's color.</li>
+        <li><strong>Read the events in those calendars</strong> (title, date and time) for the month on screen, so they can be drawn in the grid.</li>
+      </ul>
+      <p>This data is used only to display your calendar on your own Mac. It goes straight from Google to your Mac and is never sent to us or anyone else. It isn't used for advertising or to train AI models. The full details are in the <a href="/privacy">Privacy Policy</a>.</p>
+
+      <h2>Setup</h2>
+      <p>No setup beyond signing in. Click <strong>Sign in with Google</strong>, allow read-only access to your calendar, and add the widget. See the <a href="/support#setup">Support page</a> for details.</p>
+
+      <h2>License</h2>
+      <p>Open source. See the <a href="https://github.com/Hitjack007/googleCalendarWidget">repository</a> for license details.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <nav aria-label="Footer">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/support">Support</a>
+        <a href="https://github.com/Hitjack007/googleCalendarWidget">Source code on GitHub</a>
+        <a href="mailto:hitjack007.master@gmail.com">Contact</a>
+      </nav>
+      <p>This project is not affiliated with or endorsed by Google. Google Calendar is a trademark of Google LLC.</p>
+    </div>
+  </footer>
+</body>
+</html>

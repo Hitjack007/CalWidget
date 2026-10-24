@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Support · CalWidget</title>
+  <meta name="description" content="Help, setup steps and FAQ for CalWidget, a macOS widget for Google Calendar.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="/"><img src="favicon.svg" alt="">CalWidget</a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="/">Home</a>
+        <a href="/support" aria-current="page">Support</a>
+        <a href="/privacy">Privacy</a>
+        <a href="https://github.com/Hitjack007/googleCalendarWidget">GitHub</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="wrap">
+      <h1>Support</h1>
+      <p class="meta"><strong>CalWidget</strong></p>
+
+      <h2>Getting help</h2>
+      <ul>
+        <li><strong>Bugs and feature requests:</strong> open an issue on <a href="https://github.com/Hitjack007/googleCalendarWidget/issues">GitHub</a>. Please include your macOS version and the app version, and describe what you expected to happen and what happened instead.</li>
+        <li><strong>Email:</strong> <a href="mailto:hitjack007.master@gmail.com">hitjack007.master@gmail.com</a></li>
+        <li><strong>Discord:</strong> hitjack007</li>
+      </ul>
+      <p>This is a free, spare-time project, so replies may take a day or two.</p>
+
+      <h2>Frequently asked questions</h2>
+
+      <h3 id="setup">How do I set it up?</h3>
+      <ol>
+        <li>Open the app and click <strong>Sign in with Google</strong>.</li>
+        <li>Choose your Google account. Google shows a screen asking you to let the app <strong>view your calendars</strong>. Click <strong>Allow</strong>.</li>
+        <li>Add the widget from Edit Widgets in Notification Center or on the desktop.</li>
+      </ol>
+      <p>That's it. There's nothing to configure in Google Cloud.</p>
+
+      <h3>I'm asked to sign in again</h3>
+      <p>This happens if access was removed on Google's side, for example after you revoked it at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a> or changed your Google password. Sign in again in the app and click <strong>Allow</strong>.</p>
+
+      <h3>The widget shows old or no events</h3>
+      <ul>
+        <li>Open the app to confirm that you're signed in.</li>
+        <li>Widgets refresh on a schedule that macOS controls, so changes in Google Calendar can take a few minutes to appear.</li>
+        <li>Remove the widget and add it again.</li>
+      </ul>
+
+      <h3>The widget doesn't appear in the widget gallery</h3>
+      <p>Open the app once, then check Edit Widgets again. If it's still missing, log out and back in, or restart your Mac.</p>
+
+      <h3>Which calendars are shown?</h3>
+      <p>Calendars you've selected in the app. The widget uses the colors you've set in Google Calendar.</p>
+
+      <h3>Can the app change my events?</h3>
+      <p>No. It asks for read-only access.</p>
+
+      <h3>How do I sign out or remove access?</h3>
+      <p>Choose <strong>Sign out</strong> in the app. To also revoke access on Google's side, go to <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+
+      <h2>Privacy</h2>
+      <p>See the <a href="/privacy">Privacy Policy</a>.</p>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <nav aria-label="Footer">
+        <a href="/privacy">Privacy Policy</a>
+        <a href="/support">Support</a>
+        <a href="https://github.com/Hitjack007/googleCalendarWidget">Source code on GitHub</a>
+      </nav>
+      <p>This project is not affiliated with or endorsed by Google. Google Calendar is a trademark of Google LLC.</p>
+    </div>
+  </footer>
+</body>
+</html>

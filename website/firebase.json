@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "public": "public",
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "ignore": ["**/.*"]
+  },
+  "emulators": {
+    "hosting": { "port": 5050 }
+  }
+}
