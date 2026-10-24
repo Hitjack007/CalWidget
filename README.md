@@ -56,7 +56,7 @@ firebase deploy --only hosting
 
 ## Support
 
-Bugs and feature requests: [open an issue](https://github.com/Hitjack007/googleCalendarWidget/issues). You can also email [hitjack007.master@gmail.com](mailto:hitjack007.master@gmail.com) or find me on Discord as `hitjack007`.
+Bugs and feature requests: [open an issue](https://github.com/Hitjack007/CalWidget/issues). You can also email [hitjack007.master@gmail.com](mailto:hitjack007.master@gmail.com) or find me on Discord as `hitjack007`.
 
 ---
 
