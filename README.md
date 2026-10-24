@@ -1,0 +1,73 @@
+# CalWidget
+
+A native macOS widget that shows a full month view of your Google Calendar, right in Notification Center or on your desktop. It reads Google Calendar directly, so it doesn't depend on syncing through Apple Calendar.
+
+**Website:** [gcalwidget.marksstuff.com](https://gcalwidget.marksstuff.com) · [Privacy Policy](https://gcalwidget.marksstuff.com/privacy) · [Support](https://gcalwidget.marksstuff.com/support)
+
+## Features
+
+- Month grid with compact event chips in each day
+- Reads directly from Google Calendar
+- Uses your Google calendar colors
+- Medium and large widget sizes
+- Light and dark mode
+- No account on our side and no tracking. Your data goes only between your Mac and Google
+
+## Using it
+
+1. Open the app and click **Sign in with Google**.
+2. Allow read-only access to your calendar.
+3. Add the widget from Edit Widgets in Notification Center or on the desktop.
+
+The widget refreshes in the background and shows the current month.
+
+## Privacy
+
+The app asks for one permission, `https://www.googleapis.com/auth/calendar.readonly`, and can't create, edit, or delete events. It keeps only each calendar's name and color and each event's title, times, and all-day flag. Data is cached on your Mac and sign-in tokens are kept in the Keychain. Nothing is sent to us or anyone else, and there are no analytics. Full details are in the [Privacy Policy](https://gcalwidget.marksstuff.com/privacy).
+
+## Building from source
+
+Requirements: Xcode with the macOS 27 SDK (the deployment target is macOS 27.0) and an Apple developer team for signing.
+
+1. Open `CalWidget.xcodeproj`.
+2. For both targets (`googleCalendarWidget` and `MonthWidgetExtension`), choose your team under **Signing & Capabilities**. The app and widget share data through an App Group and a Keychain access group that are prefixed with your team ID.
+3. Set up a Google OAuth client:
+   1. In the [Google Cloud Console](https://console.cloud.google.com/), create a project and enable the **Google Calendar API**.
+   2. Configure the OAuth consent screen with the `calendar.readonly` scope.
+   3. Create an OAuth client ID of type **iOS**, using the app's bundle ID. iOS-type clients have no client secret.
+4. Paste the client ID into `Shared/GoogleConfig.swift`:
+
+   ```swift
+   static let clientID = "1234567890-abc123.apps.googleusercontent.com"
+   ```
+
+5. Run the `googleCalendarWidget` scheme.
+
+Sign-in uses the reversed client ID as its redirect scheme (`com.googleusercontent.apps.<id>:/oauth2redirect`), so no extra redirect setup is needed.
+
+## Project layout
+
+| Path | What's in it |
+| --- | --- |
+| `googleCalendarWidget/` | The macOS app: sign-in, settings panes, calendar selection |
+| `MonthWidget/` | The WidgetKit extension |
+| `Shared/` | Code used by both: Google API client, models, storage, the month calendar view, OAuth config |
+| `website/` | The static website, deployed with Firebase Hosting |
+
+### Website
+
+The site in `website/public/` is plain HTML and CSS. To preview and deploy it:
+
+```sh
+cd website
+firebase emulators:start --only hosting   # preview at http://localhost:5050
+firebase deploy --only hosting
+```
+
+## Support
+
+Bugs and feature requests: [open an issue](https://github.com/Hitjack007/googleCalendarWidget/issues). You can also email [hitjack007.master@gmail.com](mailto:hitjack007.master@gmail.com) or find me on Discord as `hitjack007`.
+
+---
+
+*This project is not affiliated with or endorsed by Google. Google Calendar is a trademark of Google LLC.*
