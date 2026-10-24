@@ -31,19 +31,9 @@ Requirements: Xcode with the macOS 27 SDK (the deployment target is macOS 27.0) 
 
 1. Open `CalWidget.xcodeproj`.
 2. For both targets (`googleCalendarWidget` and `MonthWidgetExtension`), choose your team under **Signing & Capabilities**. The app and widget share data through an App Group and a Keychain access group that are prefixed with your team ID.
-3. Set up a Google OAuth client:
-   1. In the [Google Cloud Console](https://console.cloud.google.com/), create a project and enable the **Google Calendar API**.
-   2. Configure the OAuth consent screen with the `calendar.readonly` scope.
-   3. Create an OAuth client ID of type **iOS**, using the app's bundle ID. iOS-type clients have no client secret.
-4. Paste the client ID into `Shared/GoogleConfig.swift`:
+3. Run the `googleCalendarWidget` scheme, then sign in with Google like any other user.
 
-   ```swift
-   static let clientID = "1234567890-abc123.apps.googleusercontent.com"
-   ```
-
-5. Run the `googleCalendarWidget` scheme.
-
-Sign-in uses the reversed client ID as its redirect scheme (`com.googleusercontent.apps.<id>:/oauth2redirect`), so no extra redirect setup is needed.
+The app comes with its own Google sign-in built in, so there's nothing to set up in Google Cloud.
 
 ## Project layout
 
