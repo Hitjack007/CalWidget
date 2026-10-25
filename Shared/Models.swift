@@ -69,31 +69,10 @@ nonisolated struct GoogleCalendarInfo: Identifiable, Codable, Hashable, Sendable
     let isPrimary: Bool
 }
 
-/// How the widget's card is drawn.
-nonisolated enum BackgroundStyle: String, Codable, CaseIterable, Identifiable, Sendable {
-    /// A flat color.
-    case solid
-    /// A blurred, see-through material with the color mixed in.
-    case glass
-    /// No card at all, so the wallpaper shows through.
-    case clear
-
-    var id: String { rawValue }
-
-    var title: String {
-        switch self {
-        case .solid: "Solid"
-        case .glass: "Glass"
-        case .clear: "Clear"
-        }
-    }
-}
-
 /// Everything the user can change about how the widget looks.
 nonisolated struct WidgetTheme: Codable, Equatable, Sendable {
     var background = RGBAColor(red: 0.24, green: 0.21, blue: 0.21)
-    var backgroundStyle = BackgroundStyle.solid
-    /// How strongly the background color shows. Solid fades toward see-through, glass lets the color tint the blur.
+    /// How strongly the background color shows. Lower values let the wallpaper through.
     var backgroundOpacity = 1.0
     var text = RGBAColor(red: 1, green: 1, blue: 1)
     /// Opacity of day numbers that belong to the previous or next month.
@@ -122,26 +101,28 @@ nonisolated struct WidgetTheme: Codable, Equatable, Sendable {
                                    accent: RGBAColor(red: 0.20, green: 0.40, blue: 0.85),
                                    accentText: RGBAColor(red: 1, green: 1, blue: 1))
 
-    static let glass = WidgetTheme(background: RGBAColor(red: 0.08, green: 0.09, blue: 0.12),
-                                   backgroundStyle: .glass,
-                                   backgroundOpacity: 0.35,
-                                   grid: RGBAColor(red: 1, green: 1, blue: 1, alpha: 0.22),
-                                   chipSoftness: 0.3)
-
-    static let clear = WidgetTheme(backgroundStyle: .clear,
-                                   grid: RGBAColor(red: 1, green: 1, blue: 1, alpha: 0.3),
-                                   chipSoftness: 0.2)
-
-    static let midnight = WidgetTheme(background: RGBAColor(red: 0.07, green: 0.09, blue: 0.16),
-                                      grid: RGBAColor(red: 0.6, green: 0.7, blue: 1, alpha: 0.18),
-                                      accent: RGBAColor(red: 0.62, green: 0.76, blue: 1),
-                                      accentText: RGBAColor(red: 0.05, green: 0.10, blue: 0.25))
-
     /// A preset's colors with this theme's week start and + button choices kept.
     func applying(_ preset: WidgetTheme) -> WidgetTheme {
         var theme = preset
         theme.weekStart = weekStart
         theme.showPlusButton = showPlusButton
+        return theme
+    }
+
+    /// This theme adapted for the system's Clear and Tinted widget styles.
+    /// macOS removes the background there and tints everything it draws white, so dark text and
+    /// opaque pastel chips would turn into white blocks. Use translucent white shapes with white text instead.
+    var forAccentedRendering: WidgetTheme {
+        var theme = self
+        let white = RGBAColor(red: 1, green: 1, blue: 1)
+        theme.text = white
+        theme.chipText = white
+        theme.useCalendarColors = false
+        theme.customChip = RGBAColor(red: 1, green: 1, blue: 1, alpha: 0.30)
+        theme.chipSoftness = 0
+        theme.accent = RGBAColor(red: 1, green: 1, blue: 1, alpha: 0.35)
+        theme.accentText = white
+        theme.grid = RGBAColor(red: 1, green: 1, blue: 1, alpha: 0.25)
         return theme
     }
 

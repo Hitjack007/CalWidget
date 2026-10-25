@@ -74,6 +74,18 @@ nonisolated enum SharedStore {
         set { defaults.set(newValue, forKey: "lastSync") }
     }
 
+    // MARK: Debugging
+
+    #if DEBUG
+    /// Debug builds only: makes the widget show dummy data whether or not you're signed in.
+    static var useDummyData: Bool {
+        get { defaults.bool(forKey: "debugUseDummyData") }
+        set { defaults.set(newValue, forKey: "debugUseDummyData") }
+    }
+    #else
+    static var useDummyData: Bool { false }
+    #endif
+
     // MARK: Month navigation
 
     /// How many months the widget's arrows have moved away from the current month.
@@ -98,19 +110,19 @@ nonisolated enum SharedStore {
         return String(format: "%04d-%02d", parts.year ?? 0, parts.month ?? 0)
     }
 
-    /// Cache keys combine the month with the calendars shown, since a widget can override the app's selection.
-    private static func cacheKey(_ month: Date, calendarIDs: Set<String>?) -> String {
-        guard let calendarIDs else { return monthKey(month) }
-        return monthKey(month) + "|" + calendarIDs.sorted().joined(separator: ",")
+    /// Cache keys combine the month with a scope. A widget that overrides the calendars or week start
+    /// gets its own scope, because it fetches a different set of events. An empty scope is the app's own.
+    private static func cacheKey(_ month: Date, scope: String) -> String {
+        scope.isEmpty ? monthKey(month) : monthKey(month) + "|" + scope
     }
 
-    static func cachedEvents(for month: Date, calendarIDs: Set<String>? = nil) -> [CalendarEvent]? {
-        read([String: [CalendarEvent]].self, key: "eventCache")?[cacheKey(month, calendarIDs: calendarIDs)]
+    static func cachedEvents(for month: Date, scope: String = "") -> [CalendarEvent]? {
+        read([String: [CalendarEvent]].self, key: "eventCache")?[cacheKey(month, scope: scope)]
     }
 
-    static func cache(_ events: [CalendarEvent], for month: Date, calendarIDs: Set<String>? = nil) {
+    static func cache(_ events: [CalendarEvent], for month: Date, scope: String = "") {
         var all = read([String: [CalendarEvent]].self, key: "eventCache") ?? [:]
-        all[cacheKey(month, calendarIDs: calendarIDs)] = events
+        all[cacheKey(month, scope: scope)] = events
         // Keep the cache small: drop the oldest entries beyond a dozen.
         for key in all.keys.sorted().dropLast(12) { all[key] = nil }
         write(all, key: "eventCache")
@@ -127,7 +139,7 @@ nonisolated enum SharedStore {
 
 /// Thin wrapper over the data-protection keychain, shared by the app and widget through a keychain access group.
 nonisolated enum KeychainStore {
-    private static let service = "googleCalendarWidget"
+    private static let service = "com.hitjack007.calwidget"
 
     private static func baseQuery(account: String) -> [String: Any] {
         var query: [String: Any] = [

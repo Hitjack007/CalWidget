@@ -1,9 +1,9 @@
 # Privacy Policy
 
-**gCalWidget**
+**CalWidget**
 Last updated: 25 October 2026
 
-This policy explains what gCalWidget ("the app") does with your data. The short version: **your data stays on your Mac. We don't collect it, store it, or see it.**
+This policy explains what CalWidget ("the app") does with your data. The short version: **your data stays on your Mac. We don't collect it, store it, or see it.**
 
 ## Who we are
 
@@ -35,7 +35,7 @@ The app's use and transfer of information received from Google APIs to any other
 
 ## Google sign-in
 
-Sign-in uses a Google OAuth client registered by the developer of gCalWidget. The client ID identifies the app to Google. It doesn't give the developer any access to your account or data. Your sign-in tokens are issued to the app on your Mac, and only your Mac holds them. We never receive them.
+Sign-in uses a Google OAuth client registered by the developer of CalWidget. The client ID identifies the app to Google. It doesn't give the developer any access to your account or data. Your sign-in tokens are issued to the app on your Mac, and only your Mac holds them. We never receive them.
 
 ## Retention and deletion
 

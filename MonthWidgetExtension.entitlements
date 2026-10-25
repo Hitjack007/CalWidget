@@ -4,11 +4,11 @@
 <dict>
 	<key>com.apple.security.application-groups</key>
 	<array>
-		<string>$(TeamIdentifierPrefix)com.hitjack007.googlecalendarwidget</string>
+		<string>$(TeamIdentifierPrefix)com.hitjack007.calwidget</string>
 	</array>
 	<key>keychain-access-groups</key>
 	<array>
-		<string>$(AppIdentifierPrefix)com.hitjack007.googlecalendarwidget</string>
+		<string>$(AppIdentifierPrefix)com.hitjack007.calwidget</string>
 	</array>
 </dict>
 </plist>

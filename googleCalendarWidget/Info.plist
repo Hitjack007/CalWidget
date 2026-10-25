@@ -3,8 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>AppGroupIdentifier</key>
-	<string>$(TeamIdentifierPrefix)com.hitjack007.googlecalendarwidget</string>
+	<string>$(TeamIdentifierPrefix)com.hitjack007.calwidget</string>
 	<key>KeychainAccessGroup</key>
-	<string>$(AppIdentifierPrefix)com.hitjack007.googlecalendarwidget</string>
+	<string>$(AppIdentifierPrefix)com.hitjack007.calwidget</string>
 </dict>
 </plist>

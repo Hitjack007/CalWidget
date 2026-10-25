@@ -45,12 +45,14 @@ struct OverviewPane: View {
                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 10))
             }
 
-            VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 8) {
                 Text("Add it to your Mac")
                     .font(.headline)
-                Text("Right-click the desktop, or open Notification Center, then choose Edit Widgets and search for “gCalWidget”.")
-                    .foregroundStyle(.secondary)
+                Label("Right-click your desktop, or open Notification Center", systemImage: "1.circle")
+                Label("Choose Edit Widgets and search for “CalWidget”", systemImage: "2.circle")
+                Label("Add it, then right-click the widget and choose Edit Widget to change its style or calendars", systemImage: "3.circle")
             }
+            .foregroundStyle(.secondary)
 
             if model.isSignedIn {
                 HStack {

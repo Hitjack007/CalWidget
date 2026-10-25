@@ -1,4 +1,4 @@
-# gCalWidget
+# CalWidget
 
 A native macOS widget that shows a full month view of your Google Calendar, right in Notification Center or on your desktop. It reads Google Calendar directly, so it doesn't depend on syncing through Apple Calendar.
 
@@ -6,11 +6,12 @@ Free and open source.
 
 ## Features
 
-- Month grid with compact event chips in each day
-- Reads directly from Google Calendar
-- Uses your Google calendar colors
-- Medium and large widget sizes
-- Light and dark mode
+- A full month grid with event chips, including events that span several days
+- Reads directly from Google Calendar, using your calendar colors
+- Medium, Large and Extra Large sizes. Medium shows a mini month with event dots and a list of what's coming up
+- Browse months from the widget with its arrows, and add events with the + button
+- Choose a style for each widget (Dark, Light, Automatic, or your own colors) and which calendars it shows
+- Works with the macOS Clear and Tinted widget styles, so it can use the system's Liquid Glass look
 - No account on our side and no tracking. Your data goes only between your Mac and Google
 
 ## How it works
@@ -23,11 +24,11 @@ The app asks only for **read-only** access to your calendar. It can't create, ed
 
 ## Setup
 
-1. Open gCalWidget and click **Sign in with Google**.
+1. Open CalWidget and click **Sign in with Google**.
 2. Allow read-only access to your calendar.
 3. Add the widget from Edit Widgets in Notification Center or on the desktop.
 
-That's it. There's nothing to configure unless you want to change colors, choose which calendars to show, or pick the first day of the week.
+That's it. To change how a widget looks, right-click it and choose **Edit Widget**. For a see-through glass look, set **Widget style** to **Clear** in System Settings, under Desktop & Dock. macOS then draws its own glass behind the widget.
 
 ## Links
 

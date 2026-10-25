@@ -17,31 +17,24 @@ struct AppearancePane: View {
                     HStack {
                         Button("Dark") { apply(.standard) }
                         Button("Light") { apply(.light) }
-                        Button("Midnight") { apply(.midnight) }
-                        Button("Glass") { apply(.glass) }
-                        Button("Clear") { apply(.clear) }
                     }
                 }
 
                 Section {
-                    Picker("Style", selection: $model.theme.backgroundStyle) {
-                        ForEach(BackgroundStyle.allCases) { style in
-                            Text(style.title).tag(style)
-                        }
-                    }
-                    .pickerStyle(.segmented)
-
-                    if model.theme.backgroundStyle != .clear {
-                        ColorPicker("Color", selection: color(\.background))
-                        LabeledContent(model.theme.backgroundStyle == .glass ? "Tint" : "Opacity") {
-                            Slider(value: $model.theme.backgroundOpacity, in: 0...1)
-                                .frame(width: 160)
-                        }
+                    ColorPicker("Color", selection: color(\.background))
+                    LabeledContent("Opacity") {
+                        Slider(value: $model.theme.backgroundOpacity, in: 0...1)
+                            .frame(width: 160)
                     }
                 } header: {
                     Text("Background")
                 } footer: {
-                    Text(backgroundFootnote)
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Want a see-through glass look? Set macOS's own widget style to Clear. The system then draws real Liquid Glass behind this widget and adapts its colors.")
+                        if let url = URL(string: "x-apple.systempreferences:com.apple.Desktop-Settings.extension") {
+                            Link("Open Desktop & Dock settings", destination: url)
+                        }
+                    }
                 }
 
                 Section("Colors") {
@@ -91,14 +84,6 @@ struct AppearancePane: View {
         .onChange(of: model.theme) { model.themeDidChange() }
     }
 
-    private var backgroundFootnote: String {
-        switch model.theme.backgroundStyle {
-        case .solid: "A flat card in the color you pick."
-        case .glass: "A blurred, see-through card. Raise Tint to color it."
-        case .clear: "No card, so your wallpaper shows through. Choose a text color that reads well on it."
-        }
-    }
-
     private func color(_ keyPath: WritableKeyPath<WidgetTheme, RGBAColor>) -> Binding<Color> {
         Binding(get: { model.theme[keyPath: keyPath].color },
                 set: { model.theme[keyPath: keyPath] = RGBAColor($0) })
@@ -110,9 +95,9 @@ struct AppearancePane: View {
     }
 }
 
-#Preview("Glass") {
+#Preview("Light") {
     let model = AppModel()
-    model.theme = .glass
+    model.theme = .light
     return AppearancePane()
         .environment(model)
         .frame(width: 820, height: 700)

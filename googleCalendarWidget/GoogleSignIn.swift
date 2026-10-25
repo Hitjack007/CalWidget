@@ -2,33 +2,34 @@
 //  GoogleSignIn.swift
 //  googleCalendarWidget
 //
-//  Interactive Google sign-in: OAuth 2.0 authorization code flow with PKCE, run in the system web
-//  authentication sheet. Uses an iOS-type client ID, which needs no client secret.
+//  Interactive Google sign-in for a macOS desktop app, following Google's guidance for native apps:
+//  the OAuth 2.0 authorization code flow with PKCE, opened in the user's default browser, with the
+//  response delivered to a loopback address (http://127.0.0.1:<port>) that the app listens on briefly.
+//  Custom URL schemes aren't used, because Google no longer supports them for this.
 //
 
-import AuthenticationServices
 import AppKit
+import Network
 import CryptoKit
 
 enum GoogleSignIn {
     private static let clientIDSuffix = ".apps.googleusercontent.com"
+    private static let timeout: Duration = .seconds(300)
 
     static func isValid(clientID: String) -> Bool {
         clientID.hasSuffix(clientIDSuffix) && clientID.count > clientIDSuffix.count
     }
 
-    /// Google's iOS-type clients redirect to the reversed client ID.
-    static func redirectScheme(for clientID: String) -> String {
-        "com.googleusercontent.apps." + clientID.replacingOccurrences(of: clientIDSuffix, with: "")
-    }
-
     @MainActor
     static func signIn(clientID: String) async throws -> TokenSet {
-        let scheme = redirectScheme(for: clientID)
-        let redirectURI = "\(scheme):/oauth2redirect"
         let verifier = randomURLSafeString(byteCount: 48)
         let state = randomURLSafeString(byteCount: 16)
         let challenge = Data(SHA256.hash(data: Data(verifier.utf8))).base64URLEncoded
+
+        let server = LoopbackServer()
+        defer { server.stop() }
+        let port = try await server.start()
+        let redirectURI = "http://127.0.0.1:\(port)"
 
         var components = URLComponents(string: "https://accounts.google.com/o/oauth2/v2/auth")
         components?.queryItems = [
@@ -43,10 +44,22 @@ enum GoogleSignIn {
             URLQueryItem(name: "access_type", value: "offline"),
             URLQueryItem(name: "prompt", value: "consent")
         ]
-        guard let authURL = components?.url else { throw GoogleAPIError.invalidResponse }
+        guard let authURL = components?.url, NSWorkspace.shared.open(authURL) else {
+            throw SignInError.couldNotOpenBrowser
+        }
 
-        let callback = try await WebAuthenticator().authenticate(url: authURL, callbackScheme: scheme)
-        let items = URLComponents(url: callback, resolvingAgainstBaseURL: false)?.queryItems ?? []
+        // Give up if the user wanders off, so the app doesn't listen forever.
+        let timeoutTask = Task {
+            try await Task.sleep(for: timeout)
+            server.stop(with: SignInError.timedOut)
+        }
+        defer { timeoutTask.cancel() }
+
+        let items = try await withTaskCancellationHandler {
+            try await server.waitForRedirect()
+        } onCancel: {
+            server.stop()
+        }
 
         if let error = items.first(where: { $0.name == "error" })?.value {
             throw SignInError.denied(error)
@@ -67,11 +80,15 @@ enum GoogleSignIn {
 
 enum SignInError: LocalizedError {
     case denied(String)
+    case couldNotOpenBrowser
+    case timedOut
     case keychainFailed
 
     var errorDescription: String? {
         switch self {
         case .denied(let reason): "Google didn't allow sign-in (\(reason))."
+        case .couldNotOpenBrowser: "Couldn't open your web browser to sign in."
+        case .timedOut: "Sign-in took too long and was stopped. Try again."
         case .keychainFailed: "Signed in, but the sign-in couldn't be saved to the Keychain."
         }
     }
@@ -83,32 +100,5 @@ private extension Data {
             .replacingOccurrences(of: "+", with: "-")
             .replacingOccurrences(of: "/", with: "_")
             .replacingOccurrences(of: "=", with: "")
-    }
-}
-
-/// Wraps `ASWebAuthenticationSession` in async/await and supplies the window it presents from.
-@MainActor
-private final class WebAuthenticator: NSObject, ASWebAuthenticationPresentationContextProviding {
-    private var session: ASWebAuthenticationSession?
-
-    func authenticate(url: URL, callbackScheme: String) async throws -> URL {
-        try await withCheckedThrowingContinuation { continuation in
-            let session = ASWebAuthenticationSession(url: url, callback: .customScheme(callbackScheme)) { @Sendable callbackURL, error in
-                if let callbackURL {
-                    continuation.resume(returning: callbackURL)
-                } else {
-                    continuation.resume(throwing: error ?? GoogleAPIError.invalidResponse)
-                }
-            }
-            session.presentationContextProvider = self
-            self.session = session
-            if !session.start() {
-                continuation.resume(throwing: GoogleAPIError.invalidResponse)
-            }
-        }
-    }
-
-    func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-        NSApp.keyWindow ?? NSApp.windows.first ?? ASPresentationAnchor()
     }
 }

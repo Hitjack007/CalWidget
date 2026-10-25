@@ -1,0 +1,77 @@
+{
+  "fill" : {
+    "linear-gradient" : [
+      "display-p3:0.36000,0.57000,0.96000,1.00000",
+      "display-p3:0.16000,0.38000,0.86000,1.00000"
+    ]
+  },
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "image-name" : "Day.png",
+          "name" : "Day"
+        },
+        {
+          "image-name" : "Date.png",
+          "name" : "Date"
+        },
+        {
+          "image-name" : "Event1.png",
+          "name" : "Event 1"
+        },
+        {
+          "image-name" : "Event2.png",
+          "name" : "Event 2"
+        },
+        {
+          "image-name" : "Event3.png",
+          "name" : "Event 3"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.3
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "WidgetFront.png",
+          "name" : "Widget Front"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : false,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "image-name" : "WidgetBack.png",
+          "name" : "Widget Back"
+        }
+      ],
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.4
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "squares" : "shared"
+  }
+}

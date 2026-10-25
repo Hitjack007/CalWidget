@@ -98,6 +98,10 @@ nonisolated enum GoogleAuth {
     }
 
     private static func tokenRequest(_ parameters: [String: String]) async throws -> TokenResponse {
+        var parameters = parameters
+        if !GoogleConfig.clientSecret.isEmpty {
+            parameters["client_secret"] = GoogleConfig.clientSecret
+        }
         guard let url = URL(string: "https://oauth2.googleapis.com/token") else { throw GoogleAPIError.invalidResponse }
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -259,12 +263,18 @@ nonisolated enum CalendarService {
 
     /// Events for every visible day of `month`, including the adjacent-month days in the first and last week.
     /// `calendarIDs` overrides the app's selection, which lets a single widget show different calendars.
-    static func fetchEvents(for month: Date, calendarIDs: Set<String>? = nil) async throws -> [CalendarEvent] {
+    /// `calendar` is the one the widget draws with. Its first weekday decides which edge days are visible.
+    static func fetchEvents(for month: Date, calendarIDs: Set<String>? = nil, calendar displayCalendar: Calendar? = nil) async throws -> [CalendarEvent] {
         let selected = calendarIDs ?? SharedStore.selectedCalendarIDs ?? []
         let calendars = SharedStore.calendars.filter { selected.contains($0.id) }
         guard !calendars.isEmpty else { return [] }
 
-        let range = MonthLayout.gridRange(for: month, calendar: SharedStore.theme.calendar)
+        var range = MonthLayout.gridRange(for: month, calendar: displayCalendar ?? SharedStore.theme.calendar)
+        // The Medium layout lists what's coming up, which can run past the month grid near a month's end.
+        let now = Date()
+        if range.contains(now) {
+            range = DateInterval(start: range.start, end: max(range.end, now.addingTimeInterval(14 * 86_400)))
+        }
 
         // One calendar failing (say, a subscribed calendar that went away) shouldn't blank the others.
         let outcomes = await withTaskGroup(of: Result<[CalendarEvent], Error>.self) { group in

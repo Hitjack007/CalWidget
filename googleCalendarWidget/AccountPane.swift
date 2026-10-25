@@ -11,17 +11,26 @@ struct SignInButton: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Button {
-                    Task { await model.signIn() }
-                } label: {
-                    Label("Sign in with Google", systemImage: "person.badge.key")
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(model.isWorking)
-
-                if model.isWorking {
+            if model.isSigningIn {
+                HStack(spacing: 8) {
                     ProgressView().controlSize(.small)
+                    Text("Finish signing in in your browser…")
+                        .foregroundStyle(.secondary)
+                    Button("Cancel") { model.cancelSignIn() }
+                }
+            } else {
+                HStack {
+                    Button {
+                        model.beginSignIn()
+                    } label: {
+                        Label("Sign in with Google", systemImage: "person.badge.key")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(model.isWorking)
+
+                    if model.isWorking {
+                        ProgressView().controlSize(.small)
+                    }
                 }
             }
 
@@ -52,7 +61,7 @@ struct AccountPane: View {
             }
 
             Section("Access") {
-                Label("Read-only. gCalWidget can't create, edit, or delete events.", systemImage: "lock")
+                Label("Read-only. CalWidget can't create, edit, or delete events.", systemImage: "lock")
                 Label("Your calendar data goes straight from Google to your Mac.", systemImage: "desktopcomputer")
                 if let url = URL(string: "https://myaccount.google.com/permissions") {
                     Link("Manage access in your Google account", destination: url)

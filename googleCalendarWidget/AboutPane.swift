@@ -4,6 +4,7 @@
 //
 
 import SwiftUI
+import AppKit
 
 struct AboutPane: View {
     private var version: String {
@@ -15,7 +16,18 @@ struct AboutPane: View {
     var body: some View {
         Form {
             Section {
-                LabeledContent("Version", value: version)
+                HStack(spacing: 16) {
+                    Image(nsImage: NSApp.applicationIconImage)
+                        .resizable()
+                        .frame(width: 64, height: 64)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("CalWidget")
+                            .font(.title2.bold())
+                        Text("Version \(version)")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+                .padding(.vertical, 4)
             }
 
             Section("Links") {
@@ -25,7 +37,7 @@ struct AboutPane: View {
             }
 
             Section {
-                Text("gCalWidget is free and open source. It isn't affiliated with or endorsed by Google. Google Calendar is a trademark of Google LLC.")
+                Text("CalWidget is free and open source. It isn't affiliated with or endorsed by Google. Google Calendar is a trademark of Google LLC.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }

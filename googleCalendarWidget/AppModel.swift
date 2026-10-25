@@ -5,7 +5,6 @@
 
 import SwiftUI
 import WidgetKit
-import AuthenticationServices
 
 /// App-wide state: sign-in, calendars, the widget's look, and the preview shown in the window.
 @Observable
@@ -19,9 +18,24 @@ final class AppModel {
     var previewOffset = 0
     var lastSync = SharedStore.lastSync
     var isWorking = false
+    var isSigningIn = false
     var errorMessage: String?
 
+    #if DEBUG
+    var useDummyData = SharedStore.useDummyData
+    #endif
+
+    /// True when the app and widget are showing sample events instead of real ones.
+    var isShowingSampleData: Bool {
+        #if DEBUG
+        return !isSignedIn || useDummyData
+        #else
+        return !isSignedIn
+        #endif
+    }
+
     private var themeSaveTask: Task<Void, Never>?
+    private var signInTask: Task<Void, Never>?
 
     var previewMonth: Date {
         MonthLayout.month(offset: previewOffset, calendar: theme.calendar)
@@ -41,22 +55,35 @@ final class AppModel {
 
     // MARK: Sign-in
 
-    func signIn() async {
+    /// Starts sign-in in the user's browser. Call `cancelSignIn()` to stop waiting for it.
+    func beginSignIn() {
+        guard !isSigningIn else { return }
+        signInTask = Task { await signIn() }
+    }
+
+    func cancelSignIn() {
+        signInTask?.cancel()
+    }
+
+    private func signIn() async {
         errorMessage = nil
         guard GoogleConfig.isConfigured else {
             errorMessage = GoogleAPIError.missingClientID.localizedDescription
             return
         }
 
-        isWorking = true
-        defer { isWorking = false }
+        isSigningIn = true
+        defer {
+            isSigningIn = false
+            signInTask = nil
+        }
         do {
             let tokens = try await GoogleSignIn.signIn(clientID: GoogleConfig.clientID)
             guard TokenStore.save(tokens) else { throw SignInError.keychainFailed }
             isSignedIn = true
             await refreshAll()
-        } catch let error as ASWebAuthenticationSessionError where error.code == .canceledLogin {
-            // The user closed the sign-in window; nothing to report.
+        } catch is CancellationError {
+            // The user cancelled; nothing to report.
         } catch {
             errorMessage = error.localizedDescription
         }
@@ -147,6 +174,13 @@ final class AppModel {
         refreshIntervalDidChange()
         resetAppearance()
     }
+
+    #if DEBUG
+    func dummyDataDidChange() {
+        SharedStore.useDummyData = useDummyData
+        WidgetCenter.shared.reloadAllTimelines()
+    }
+    #endif
 
     // MARK: Appearance
 

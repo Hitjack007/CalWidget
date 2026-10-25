@@ -1,0 +1,2 @@
+# Google OAuth client secret. Copy Config/GoogleSecrets.swift.example to Shared/GoogleSecrets.swift and fill it in.
+Shared/GoogleSecrets.swift

@@ -106,8 +106,8 @@ struct MonthCalendarView<Navigation: View>: View {
     let theme: WidgetTheme
     let isLarge: Bool
     let message: String?
-    /// Lets macOS tint the event chips when the widget uses the Tinted style.
-    let accentableChips: Bool
+    /// True when macOS renders the widget in its Clear or Tinted style, which tints everything white.
+    let isAccented: Bool
     let navigation: Navigation
 
     init(month: Date,
@@ -116,15 +116,15 @@ struct MonthCalendarView<Navigation: View>: View {
          theme: WidgetTheme,
          isLarge: Bool = true,
          message: String? = nil,
-         accentableChips: Bool = false,
+         isAccented: Bool = false,
          @ViewBuilder navigation: () -> Navigation) {
         self.month = month
         self.today = today
         self.events = events
-        self.theme = theme
+        self.theme = isAccented ? theme.forAccentedRendering : theme
         self.isLarge = isLarge
         self.message = message
-        self.accentableChips = accentableChips
+        self.isAccented = isAccented
         self.navigation = navigation()
     }
 
@@ -153,9 +153,11 @@ struct MonthCalendarView<Navigation: View>: View {
                             theme: theme,
                             calendar: calendar,
                             chipHeight: isLarge ? 13 : 10,
-                            accentableChips: accentableChips)
+                            isAccented: isAccented)
                 }
             }
+            // Shows the grid as pending while a month-change button's intent runs.
+            .invalidatableContent()
         }
         .overlay(alignment: .bottom) {
             if let message {
@@ -175,6 +177,7 @@ struct MonthCalendarView<Navigation: View>: View {
             Text(month, format: .dateTime.month(.wide).year())
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundStyle(theme.text.color)
+                .invalidatableContent()
 
             Spacer()
 
@@ -189,6 +192,7 @@ struct MonthCalendarView<Navigation: View>: View {
                         .padding(.horizontal, 12)
                         .padding(.vertical, 3)
                         .background(Capsule().fill(theme.accent.color))
+                        .accessibilityLabel("New event")
                 }
             }
         }
@@ -210,7 +214,7 @@ private struct WeekRow: View {
     let theme: WidgetTheme
     let calendar: Calendar
     let chipHeight: CGFloat
-    let accentableChips: Bool
+    let isAccented: Bool
 
     private let dayNumberHeight: CGFloat = 16
 
@@ -271,7 +275,7 @@ private struct WeekRow: View {
                                        bottomTrailingRadius: segment.continuesAfter ? 0 : radius,
                                        topTrailingRadius: segment.continuesAfter ? 0 : radius)
                     .fill(base.mixedWithWhite(theme.chipSoftness).color)
-                    .widgetAccentable(accentableChips)
+                    .widgetAccentable(isAccented)
             )
     }
 
@@ -293,21 +297,12 @@ private struct WeekRow: View {
 }
 
 /// The widget card behind the month grid, drawn the same way in the widget and in the app's preview.
+/// In the system's Clear and Tinted styles macOS removes it and draws its own glass instead.
 struct WidgetBackground: View {
     let theme: WidgetTheme
 
     var body: some View {
-        switch theme.backgroundStyle {
-        case .solid:
-            theme.background.color.opacity(theme.backgroundOpacity)
-        case .glass:
-            ZStack {
-                Rectangle().fill(.ultraThinMaterial)
-                theme.background.color.opacity(theme.backgroundOpacity)
-            }
-        case .clear:
-            Color.clear
-        }
+        theme.background.color.opacity(theme.backgroundOpacity)
     }
 }
 
@@ -326,7 +321,23 @@ nonisolated enum SampleData {
             return CalendarEvent(id: id, title: title, start: start, end: end, isAllDay: true, color: color)
         }
 
+        // A few events just ahead of today, so the Medium layout's "coming up" list has content.
+        let startOfToday = calendar.startOfDay(for: Date())
+        func upcoming(_ id: String, _ title: String, days: Int, hour: Int, allDay: Bool = false, _ color: RGBAColor) -> CalendarEvent? {
+            guard let day = calendar.date(byAdding: .day, value: days, to: startOfToday) else { return nil }
+            if allDay {
+                guard let end = calendar.date(byAdding: .day, value: 1, to: day) else { return nil }
+                return CalendarEvent(id: id, title: title, start: day, end: end, isAllDay: true, color: color)
+            }
+            guard let start = calendar.date(bySettingHour: hour, minute: 30, second: 0, of: day) else { return nil }
+            return CalendarEvent(id: id, title: title, start: start, end: start.addingTimeInterval(3600), isAllDay: false, color: color)
+        }
+
         return [
+            upcoming("u1", "Team standup", days: 0, hour: 9, pink),
+            upcoming("u2", "Lunch with Sam", days: 0, hour: 12, teal),
+            upcoming("u3", "Dentist", days: 1, hour: 15, pink),
+            upcoming("u4", "Mum's birthday", days: 3, hour: 0, allDay: true, teal),
             event("1", "Standup", day: 2, pink),
             event("2", "New Year's", day: 3, teal),
             event("3", "Twelfth Night", day: 5, teal),
@@ -351,4 +362,42 @@ nonisolated enum SampleData {
     .padding(14)
     .frame(width: 364, height: 382)
     .background { WidgetBackground(theme: .standard) }
+}
+
+#Preview("Styles") {
+    let month = MonthLayout.month(offset: 0, calendar: .current)
+    // The last card imitates the system's Clear style: no background, translucent white shapes.
+    let styles: [(String, WidgetTheme, Bool)] = [("Dark", .standard, false), ("Light", .light, false), ("System Clear / Tinted", .standard, true)]
+    return HStack(spacing: 16) {
+        ForEach(styles, id: \.0) { name, theme, accented in
+            VStack(spacing: 6) {
+                MonthCalendarView(month: month, events: SampleData.events(in: month), theme: theme, isAccented: accented) { EmptyView() }
+                    .padding(12)
+                    .frame(width: 300, height: 320)
+                    .background { if !accented { WidgetBackground(theme: theme) } else { Rectangle().fill(.ultraThinMaterial) } }
+                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                Text(name).font(.caption).foregroundStyle(.white)
+            }
+        }
+    }
+    .padding(20)
+    .background {
+        LinearGradient(colors: [Color(red: 0.95, green: 0.55, blue: 0.35), Color(red: 0.55, green: 0.30, blue: 0.70), Color(red: 0.20, green: 0.35, blue: 0.75)],
+                       startPoint: .topLeading, endPoint: .bottomTrailing)
+    }
+}
+
+#Preview("Extra Large") {
+    let month = MonthLayout.month(offset: 0, calendar: .current)
+    MonthCalendarView(month: month, events: SampleData.events(in: month), theme: .standard) {
+        HStack(spacing: 10) {
+            Image(systemName: "chevron.left")
+            Image(systemName: "chevron.right")
+        }
+    }
+    .padding(16)
+    .frame(width: 726, height: 344)
+    .background { WidgetBackground(theme: .standard) }
+    .clipShape(RoundedRectangle(cornerRadius: 22))
+    .padding(20)
 }

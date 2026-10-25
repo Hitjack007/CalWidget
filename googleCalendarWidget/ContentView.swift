@@ -98,7 +98,7 @@ struct WidgetPreview: View {
 
     var body: some View {
         let month = model.previewMonth
-        let isSample = !model.isSignedIn
+        let isSample = model.isShowingSampleData
         MonthCalendarView(month: month,
                           events: isSample ? SampleData.events(in: month, calendar: model.theme.calendar) : model.events,
                           theme: model.theme) {
@@ -112,7 +112,7 @@ struct WidgetPreview: View {
         .frame(width: 364, height: 382)
         .background { WidgetBackground(theme: model.theme) }
         .clipShape(RoundedRectangle(cornerRadius: 22))
-        .shadow(color: .black.opacity(model.theme.backgroundStyle == .clear ? 0 : 0.25), radius: 12, y: 6)
+        .shadow(color: .black.opacity(0.25), radius: 12, y: 6)
         .padding(24)
         // A colorful backdrop, so Glass and Clear have something to show through.
         .background {

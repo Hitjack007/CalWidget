@@ -5,13 +5,15 @@
 
 import Foundation
 
-/// The app's Google OAuth client.
+/// The app's Google OAuth client, which is a **Desktop app** client in the Google Cloud Console.
 ///
-/// Create an **iOS**-type OAuth client in the Google Cloud Console, using the app's bundle ID,
-/// then paste its client ID below. The client ID identifies the app to Google. It isn't a secret,
-/// and iOS-type clients have no client secret.
+/// The client ID identifies the app to Google and is safe to commit. The client secret is kept in
+/// `GoogleSecrets.swift`, which git ignores (see `Config/GoogleSecrets.swift.example`). Google says a
+/// desktop app's secret can't be kept confidential, because it ships inside the app, and protects
+/// sign-in with PKCE instead. Neither value gives access to anyone's data.
 nonisolated enum GoogleConfig {
-    static let clientID = "YOUR_CLIENT_ID.apps.googleusercontent.com"
+    static let clientID = "430577335186-29tvc8deq0ceg1ie94p6ggppc1q4mru8.apps.googleusercontent.com"
+    static var clientSecret: String { GoogleSecrets.clientSecret }
 
     static var isConfigured: Bool {
         !clientID.hasPrefix("YOUR_CLIENT_ID") && clientID.hasSuffix(".apps.googleusercontent.com")

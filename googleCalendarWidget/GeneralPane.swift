@@ -38,6 +38,17 @@ struct GeneralPane: View {
                 }
             }
 
+            #if DEBUG
+            Section {
+                Toggle("Serve dummy data in the widget", isOn: $model.useDummyData)
+                    .onChange(of: model.useDummyData) { model.dummyDataDidChange() }
+            } header: {
+                Text("Debug")
+            } footer: {
+                Text("Debug builds only. The widget shows sample events even when you're not signed in. This section doesn't exist in release builds.")
+            }
+            #endif
+
             Section {
                 Button("Reset appearance to defaults") { model.resetAppearance() }
                 Button("Reset all settings…", role: .destructive) { confirmReset = true }
