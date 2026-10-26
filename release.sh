@@ -287,6 +287,12 @@ cask "${CASK_NAME}" do
 
   app "CalWidget.app"
 
+  # Clears the quarantine flag so macOS doesn't show its security warning on first open.
+  postflight do
+    system_command "/usr/bin/xattr",
+                   args: ["-dr", "com.apple.quarantine", "#{appdir}/CalWidget.app"]
+  end
+
   uninstall quit: "${BUNDLE_ID}"
 
   zap trash: [
