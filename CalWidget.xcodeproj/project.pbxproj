@@ -10,6 +10,7 @@
 		4D2D4645308D602E00A4E8DA /* WidgetKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D2D4644308D602E00A4E8DA /* WidgetKit.framework */; };
 		4D2D4647308D602E00A4E8DA /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D2D4646308D602E00A4E8DA /* SwiftUI.framework */; };
 		4D2D4652308D603000A4E8DA /* MonthWidgetExtension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 4D2D4642308D602E00A4E8DA /* MonthWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		4D2D4895308EE35F00A4E8DA /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4D2D4894308EE35F00A4E8DA /* Sparkle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,7 @@
 		4D2D462D308D5CDB00A4E8DA /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			files = (
+				4D2D4895308EE35F00A4E8DA /* Sparkle in Frameworks */,
 			);
 		};
 		4D2D463F308D602E00A4E8DA /* Frameworks */ = {
@@ -164,6 +166,9 @@
 				4D2D4660308D603000A4E8DA /* Shared */,
 			);
 			name = CalWidget;
+			packageProductDependencies = (
+				4D2D4894308EE35F00A4E8DA /* Sparkle */,
+			);
 			productName = googleCalendarWidget;
 			productReference = 4D2D4630308D5CDB00A4E8DA /* CalWidget.app */;
 			productType = "com.apple.product-type.application";
@@ -236,6 +241,9 @@
 			);
 			mainGroup = 4D2D4627308D5CDB00A4E8DA;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4D2D4893308EE31900A4E8DA /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 4D2D4631308D5CDB00A4E8DA /* Products */;
 			projectDirPath = "";
@@ -445,6 +453,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitjack007.calwidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -490,6 +499,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitjack007.calwidget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -538,7 +548,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitjack007.calwidget.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -591,7 +601,7 @@
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitjack007.calwidget.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -616,7 +626,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitjack007.calwidget.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -639,7 +649,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 27.0;
-				MACOSX_DEPLOYMENT_TARGET = 27.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.hitjack007.calwidget.tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -691,6 +701,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4D2D4893308EE31900A4E8DA /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.10.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		4D2D4894308EE35F00A4E8DA /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 4D2D4893308EE31900A4E8DA /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 4D2D4628308D5CDB00A4E8DA /* Project object */;
 	validationLevel = 1;

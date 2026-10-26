@@ -8,12 +8,14 @@ import ServiceManagement
 
 struct GeneralPane: View {
     @Environment(AppModel.self) private var model
+    @Environment(SoftwareUpdater.self) private var updater
     @State private var launchAtLogin = SMAppService.mainApp.status == .enabled
     @State private var launchError: String?
     @State private var confirmReset = false
 
     var body: some View {
         @Bindable var model = model
+        @Bindable var updater = updater
 
         Form {
             Section {
@@ -27,6 +29,14 @@ struct GeneralPane: View {
                 Text("Widget")
             } footer: {
                 Text("macOS decides when widgets actually refresh, so updates can arrive a little later than this.")
+            }
+
+            Section("Updates") {
+                Toggle("Automatically check for updates", isOn: $updater.automaticallyChecksForUpdates)
+                Toggle("Automatically download updates", isOn: $updater.automaticallyDownloadsUpdates)
+                    .disabled(!updater.automaticallyChecksForUpdates)
+                Button("Check for Updates…") { updater.checkForUpdates() }
+                    .disabled(!updater.canCheckForUpdates)
             }
 
             Section("App") {

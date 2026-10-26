@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>CalWidget</title>
+    <link>https://hitjack007.github.io/CalWidget/appcast.xml</link>
+    <description>CalWidget releases</description>
+    <language>en</language>
+
+    <!-- release.sh adds a new <item> block here for each release. -->
+
+  </channel>
+</rss>
