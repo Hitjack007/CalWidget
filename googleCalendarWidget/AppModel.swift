@@ -20,6 +20,8 @@ final class AppModel {
     var isWorking = false
     var isSigningIn = false
     var errorMessage: String?
+    /// A sidebar pane (by title) that onboarding or What's New asked the main window to open.
+    var requestedPane: String?
 
     #if DEBUG
     var useDummyData = SharedStore.useDummyData
@@ -164,15 +166,11 @@ final class AppModel {
         WidgetCenter.shared.reloadAllTimelines()
     }
 
-    func resetAppearance() {
-        theme = WidgetTheme.standard
-        themeDidChange()
-    }
-
     func resetAllSettings() {
         refreshMinutes = 30
         refreshIntervalDidChange()
-        resetAppearance()
+        theme = WidgetTheme.standard
+        themeDidChange()
     }
 
     #if DEBUG

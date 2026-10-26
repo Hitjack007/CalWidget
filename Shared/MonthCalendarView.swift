@@ -184,7 +184,7 @@ struct MonthCalendarView<Navigation: View>: View {
             navigation
                 .foregroundStyle(theme.text.color)
 
-            if theme.showPlusButton, let url = URL(string: "https://calendar.google.com/calendar/r/eventedit") {
+            if theme.showPlusButton, let url = theme.newEventURL {
                 Link(destination: url) {
                     Image(systemName: "plus")
                         .font(.system(size: 12, weight: .semibold))
@@ -260,7 +260,17 @@ private struct WeekRow: View {
             .background(Capsule().fill(isToday ? theme.accent.color : Color.clear))
     }
 
+    @ViewBuilder
     private func bar(_ segment: WeekSegment) -> some View {
+        if let link = segment.event.link {
+            Link(destination: link) { barContent(segment) }
+                .buttonStyle(.plain)
+        } else {
+            barContent(segment)
+        }
+    }
+
+    private func barContent(_ segment: WeekSegment) -> some View {
         let radius: CGFloat = 3
         let base = theme.useCalendarColors ? segment.event.color : theme.customChip
         return Text(segment.event.title)

@@ -33,7 +33,7 @@ Open the app once, then check Edit Widgets again. If it's still missing, log out
 The calendars you've selected in the app, unless you pick different ones for a particular widget. Right-click the widget, choose **Edit Widget**, and choose **Calendars**. The widget uses the colors you've set in Google Calendar.
 
 ### How do I change a widget's style?
-Right-click the widget and choose **Edit Widget**, then pick a **Style**: Custom (your colors from the app), Dark, Light, or Automatic, which follows macOS Light and Dark. Custom colors, event colors, the first day of the week and the + button are set in the app's **Appearance** pane.
+Right-click the widget and choose **Edit Widget**, then pick a **Style**: Automatic (the default, which follows macOS Light and Dark), Light, or Dark. The first day of the week and the + button are set in the app's **General** pane.
 
 ### How do I get the glass (see-through) look?
 That look comes from macOS, not from the app. Open **System Settings, Desktop & Dock**, and set **Widget style** to **Clear** (or Tinted). macOS then replaces the widget's background with Liquid Glass and adapts its colors.

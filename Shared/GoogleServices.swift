@@ -152,6 +152,7 @@ nonisolated enum CalendarAPI {
             let id: String
             let status: String?
             let summary: String?
+            let htmlLink: String?
             let start: When?
             let end: When?
         }
@@ -218,7 +219,8 @@ nonisolated enum CalendarAPI {
                                              start: start,
                                              end: max(end, start),
                                              isAllDay: item.start?.date != nil,
-                                             color: calendar.color))
+                                             color: calendar.color,
+                                             link: item.htmlLink.flatMap { URL(string: $0) }))
             }
             pageToken = page.nextPageToken
         } while pageToken != nil

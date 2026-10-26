@@ -193,7 +193,7 @@ struct CompactMonthView<Navigation: View>: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         .overlay(alignment: .topTrailing) {
-            if theme.showPlusButton, let url = URL(string: "https://calendar.google.com/calendar/r/eventedit") {
+            if theme.showPlusButton, let url = theme.newEventURL {
                 Link(destination: url) {
                     Image(systemName: "plus")
                         .font(.system(size: 10, weight: .semibold))
@@ -206,7 +206,17 @@ struct CompactMonthView<Navigation: View>: View {
         }
     }
 
+    @ViewBuilder
     private func agendaRow(_ event: CalendarEvent) -> some View {
+        if let link = event.link {
+            Link(destination: link) { agendaRowContent(event) }
+                .buttonStyle(.plain)
+        } else {
+            agendaRowContent(event)
+        }
+    }
+
+    private func agendaRowContent(_ event: CalendarEvent) -> some View {
         HStack(alignment: .top, spacing: 6) {
             RoundedRectangle(cornerRadius: 1.5)
                 .fill(accentColor(for: event.color))

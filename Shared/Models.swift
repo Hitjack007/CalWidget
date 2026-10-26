@@ -60,6 +60,8 @@ nonisolated struct CalendarEvent: Identifiable, Codable, Hashable, Sendable {
     let end: Date
     let isAllDay: Bool
     let color: RGBAColor
+    /// The event's page in Google Calendar; nil for placeholder events.
+    var link: URL? = nil
 }
 
 nonisolated struct GoogleCalendarInfo: Identifiable, Codable, Hashable, Sendable {
@@ -107,6 +109,11 @@ nonisolated struct WidgetTheme: Codable, Equatable, Sendable {
         theme.weekStart = weekStart
         theme.showPlusButton = showPlusButton
         return theme
+    }
+
+    /// Where the "+" button goes.
+    var newEventURL: URL? {
+        URL(string: "https://calendar.google.com/calendar/r/eventedit")
     }
 
     /// This theme adapted for the system's Clear and Tinted widget styles.

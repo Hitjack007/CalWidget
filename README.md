@@ -11,9 +11,9 @@ Your Google Calendar, as a real macOS widget. CalWidget puts a full month view o
 - **Month grid** — event chips in each day, including events that span several days
 - **Your calendar colors** — reads directly from Google Calendar and keeps the colors you chose
 - **Three sizes** — Medium (a mini month with event dots and a "coming up" list), Large and Extra Large
-- **Click to open** — click an event to open it in Google Calendar, or in your Mac's Calendar app if you prefer
+- **Click to open** — click an event to open it in Google Calendar
 - **Month arrows and a + button** — browse months and add events without leaving the widget
-- **Per-widget style** — Dark, Light, Automatic or Custom, plus which calendars each widget shows, from **Edit Widget**
+- **Per-widget style** — Automatic (follows macOS), Light or Dark, plus which calendars each widget shows, from **Edit Widget**
 - **Liquid Glass** — works with the macOS Clear and Tinted widget styles, so it can use the system's Liquid Glass look
 - **Automatic updates** — updates itself with Sparkle, and shows what's new after each update
 - **Private** — no account on our side and no tracking. Your data goes only between your Mac and Google
@@ -55,8 +55,6 @@ The widget refreshes in the background and shows the current month.
 ## Privacy
 
 The app asks for one permission, `https://www.googleapis.com/auth/calendar.readonly`, and can't create, edit, or delete events. It keeps only each calendar's name and color and each event's title, times, and all-day flag. Data is cached on your Mac and sign-in tokens are kept in the Keychain. Nothing is sent to us or anyone else, and there are no analytics. Full details are in the [Privacy Policy](https://gcalwidget.marksstuff.com/privacy).
-
-If you turn on **Open in Calendar app**, CalWidget asks for Calendar and Automation access so it can find the event on your Mac and show it. That's optional and everything stays on your Mac.
 
 ---
 

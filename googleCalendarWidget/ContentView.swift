@@ -10,7 +10,6 @@ import SwiftUI
 private enum SidebarItem: String, CaseIterable, Identifiable {
     case overview = "Overview"
     case calendars = "Calendars"
-    case appearance = "Appearance"
     case general = "General"
     case account = "Account"
     case about = "About"
@@ -21,7 +20,6 @@ private enum SidebarItem: String, CaseIterable, Identifiable {
         switch self {
         case .overview: "calendar"
         case .calendars: "list.bullet"
-        case .appearance: "paintpalette"
         case .general: "gearshape"
         case .account: "person.crop.circle"
         case .about: "info.circle"
@@ -36,11 +34,21 @@ struct ContentView: View {
 
     var body: some View {
         NavigationSplitView {
-            List(SidebarItem.allCases.filter { $0 != .account }, selection: $selection) { item in
-                Label(item.rawValue, systemImage: item.symbol)
-                    .tag(item)
+            List(selection: $selection) {
+                Section("Widget") {
+                    sidebarLink(.overview)
+                    sidebarLink(.calendars)
+                }
+                Section("App") {
+                    sidebarLink(.general)
+                    sidebarLink(.about)
+                }
             }
-            .navigationSplitViewColumnWidth(min: 160, ideal: 180, max: 220)
+            .listStyle(.sidebar)
+            .scrollBounceBehavior(.basedOnSize)
+            .tint(.accentColor)
+            .toolbar(removing: .sidebarToggle)
+            .navigationSplitViewColumnWidth(200)
             .safeAreaInset(edge: .bottom, spacing: 0) {
                 accountRow
             }
@@ -48,13 +56,40 @@ struct ContentView: View {
             switch selection ?? .overview {
             case .overview: OverviewPane()
             case .calendars: CalendarsPane()
-            case .appearance: AppearancePane()
             case .general: GeneralPane()
             case .account: AccountPane()
             case .about: AboutPane()
             }
         }
+        .navigationSplitViewStyle(.balanced)
+        .toolbar(removing: .sidebarToggle)
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                Text("")
+                    .frame(width: 0, height: 0)
+                    .accessibilityHidden(true)
+            }
+        }
+        .formStyle(.grouped)
+        .frame(width: 700)
+        .background(Color(NSColor.windowBackgroundColor))
+        .tint(.accentColor)
         .task { await model.start() }
+        // A pane can be requested before this window has appeared (from onboarding), so check on appear too.
+        .onAppear(perform: openRequestedPane)
+        .onChange(of: model.requestedPane) { openRequestedPane() }
+    }
+
+    private func openRequestedPane() {
+        guard let pane = model.requestedPane else { return }
+        selection = SidebarItem(rawValue: pane)
+        model.requestedPane = nil
+    }
+
+    private func sidebarLink(_ item: SidebarItem) -> some View {
+        NavigationLink(value: item) {
+            Label(item.rawValue, systemImage: item.symbol)
+        }
     }
 
     /// Account sits at the bottom of the sidebar, with the sign-in state beside it.
@@ -95,13 +130,19 @@ struct ContentView: View {
 /// Shows sample events until the user signs in.
 struct WidgetPreview: View {
     @Environment(AppModel.self) private var model
+    @Environment(\.colorScheme) private var colorScheme
+
+    /// The Automatic style, which is what new widgets use: the Dark look in dark mode, the Light look in light mode.
+    private var theme: WidgetTheme {
+        model.theme.applying(colorScheme == .dark ? .standard : .light)
+    }
 
     var body: some View {
         let month = model.previewMonth
         let isSample = model.isShowingSampleData
         MonthCalendarView(month: month,
-                          events: isSample ? SampleData.events(in: month, calendar: model.theme.calendar) : model.events,
-                          theme: model.theme) {
+                          events: isSample ? SampleData.events(in: month, calendar: theme.calendar) : model.events,
+                          theme: theme) {
             HStack(spacing: 10) {
                 Button { model.shiftPreview(by: -1) } label: { Image(systemName: "chevron.left") }
                 Button { model.shiftPreview(by: 1) } label: { Image(systemName: "chevron.right") }
@@ -110,7 +151,7 @@ struct WidgetPreview: View {
         }
         .padding(16)
         .frame(width: 364, height: 382)
-        .background { WidgetBackground(theme: model.theme) }
+        .background { WidgetBackground(theme: theme) }
         .clipShape(RoundedRectangle(cornerRadius: 22))
         .shadow(color: .black.opacity(0.25), radius: 12, y: 6)
         .padding(24)

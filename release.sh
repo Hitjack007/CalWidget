@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Usage: ./release.sh <version> "<notes>"
-# e.g.   ./release.sh 1.1 "Click an event to open it, optional Calendar app support"
+# e.g.   ./release.sh 1.1 "Click an event to open it"
 #
 # Bumps the version, archives, builds a signed DMG, updates the Sparkle appcast, creates the
 # GitHub release and updates the Homebrew cask.

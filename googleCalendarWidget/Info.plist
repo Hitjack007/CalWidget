@@ -4,6 +4,8 @@
 <dict>
 	<key>AppGroupIdentifier</key>
 	<string>$(TeamIdentifierPrefix)com.hitjack007.calwidget</string>
+	<key>LSUIElement</key>
+	<true/>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
 	<key>SUEnableInstallerLauncherService</key>

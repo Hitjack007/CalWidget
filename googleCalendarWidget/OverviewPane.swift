@@ -6,55 +6,46 @@
 import SwiftUI
 
 struct OverviewPane: View {
+    var body: some View {
+        Form {
+            PreviewSection()
+            CalendarStatusSection()
+            AddWidgetSection()
+        }
+        .formStyle(.grouped)
+        .navigationTitle("Overview")
+    }
+}
+
+/// The widget as it looks right now, drawn with the same view the widget uses.
+private struct PreviewSection: View {
+    var body: some View {
+        Section {
+            WidgetPreview()
+                .frame(maxWidth: .infinity)
+                .listRowInsets(EdgeInsets())
+                .listRowBackground(Color.clear)
+        }
+    }
+}
+
+/// Whether CalWidget is connected to Google, and when it last loaded events.
+private struct CalendarStatusSection: View {
     @Environment(AppModel.self) private var model
 
     var body: some View {
-        ScrollView {
-            // Side by side when the window is wide enough, stacked when it isn't.
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .top, spacing: 32) {
-                    WidgetPreview()
-                    details
+        if model.isSignedIn {
+            Section("Your calendar") {
+                LabeledContent("Signed in as", value: model.accountName ?? "Your Google account")
+
+                LabeledContent("Last updated") {
+                    if let lastSync = model.lastSync {
+                        Text(lastSync, format: .relative(presentation: .named))
+                    } else {
+                        Text("Never")
+                    }
                 }
-                VStack(alignment: .leading, spacing: 24) {
-                    WidgetPreview()
-                    details
-                }
-            }
-            .padding(28)
-            .frame(maxWidth: .infinity, alignment: .topLeading)
-        }
-        .navigationTitle("Overview")
-    }
 
-    private var details: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            Text("Your widget")
-                .font(.title2.bold())
-
-            if !model.isSignedIn {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Sign in to see your own events")
-                        .font(.headline)
-                    Text("The preview shows sample events. Sign in with Google to load your calendars. The app only reads your calendar.")
-                        .foregroundStyle(.secondary)
-                    SignInButton()
-                }
-                .padding(14)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .background(.quaternary, in: RoundedRectangle(cornerRadius: 10))
-            }
-
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Add it to your Mac")
-                    .font(.headline)
-                Label("Right-click your desktop, or open Notification Center", systemImage: "1.circle")
-                Label("Choose Edit Widgets and search for “CalWidget”", systemImage: "2.circle")
-                Label("Add it, then right-click the widget and choose Edit Widget to change its style or calendars", systemImage: "3.circle")
-            }
-            .foregroundStyle(.secondary)
-
-            if model.isSignedIn {
                 HStack {
                     Button {
                         Task { await model.refreshAll() }
@@ -68,18 +59,35 @@ struct OverviewPane: View {
                     }
                 }
 
-                if let lastSync = model.lastSync {
-                    Text("Last updated \(lastSync, format: .relative(presentation: .named))")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                if let error = model.errorMessage {
+                    Label(error, systemImage: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
                 }
             }
-
-            if model.isSignedIn, let error = model.errorMessage {
-                Label(error, systemImage: "exclamationmark.triangle.fill")
-                    .foregroundStyle(.orange)
+        } else {
+            Section {
+                Text("The preview shows sample events. Sign in with Google to load your own calendars. CalWidget only reads your calendar.")
+                    .foregroundStyle(.secondary)
+                SignInButton()
+            } header: {
+                Text("Sign in to see your own events")
             }
         }
-        .frame(minWidth: 260, maxWidth: 340, alignment: .leading)
     }
+}
+
+private struct AddWidgetSection: View {
+    var body: some View {
+        Section("Add it to your Mac") {
+            Label("Right-click your desktop, or open Notification Center", systemImage: "1.circle")
+            Label("Choose Edit Widgets and search for “CalWidget”", systemImage: "2.circle")
+            Label("Add it, then right-click the widget and choose Edit Widget to change its style or calendars", systemImage: "3.circle")
+        }
+    }
+}
+
+#Preview {
+    OverviewPane()
+        .environment(AppModel())
+        .frame(width: 500, height: 600)
 }

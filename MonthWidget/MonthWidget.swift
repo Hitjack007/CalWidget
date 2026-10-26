@@ -45,26 +45,24 @@ struct ShiftMonthIntent: AppIntent {
 
 // MARK: - Per-widget settings
 
-/// The widget's look. A few clearly different styles, so there's nothing to fine-tune per widget.
-/// "Custom" uses whatever is set in the app's Appearance pane. For a see-through glass look, use the
-/// Clear widget style in macOS settings: the system then draws real Liquid Glass behind any of these.
+/// The widget's look: Automatic follows macOS, or it can be fixed to Light or Dark. For a see-through glass
+/// look, use the Clear widget style in macOS settings: the system then draws real Liquid Glass behind any of these.
 enum WidgetStyle: String, AppEnum {
-    case custom, dark, light, automatic
+    case automatic, light, dark
 
     static let typeDisplayRepresentation: TypeDisplayRepresentation = "Style"
 
     static let caseDisplayRepresentations: [WidgetStyle: DisplayRepresentation] = [
-        .custom: "Custom (from app)",
-        .dark: "Dark",
+        .automatic: "Automatic",
         .light: "Light",
-        .automatic: "Automatic (Light or Dark)"
+        .dark: "Dark"
     ]
 
-    /// The theme this widget should draw with, given the app-wide theme.
+    /// The theme this widget should draw with, given the app-wide settings (week start, + button, and so on).
+    /// Automatic starts from the dark look; the widget view swaps in the light one when macOS is in light mode.
     func theme(appTheme: WidgetTheme) -> WidgetTheme {
         switch self {
-        case .custom: appTheme
-        case .dark, .automatic: appTheme.applying(.standard)
+        case .automatic, .dark: appTheme.applying(.standard)
         case .light: appTheme.applying(.light)
         }
     }
@@ -107,7 +105,7 @@ struct MonthConfigurationIntent: WidgetConfigurationIntent {
         }
     }
 
-    @Parameter(title: "Style", default: .custom)
+    @Parameter(title: "Style", default: .automatic)
     var style: WidgetStyle
 
     @Parameter(title: "Calendars", description: "Leave empty to use the calendars selected in the app.")
@@ -208,6 +206,13 @@ struct MonthWidgetEntryView: View {
     @Environment(\.colorScheme) private var colorScheme
     let entry: MonthEntry
 
+    /// True when the system recolors the widget instead of showing it in full color. That's the Clear and
+    /// Tinted widget styles (`.accented`), and also a desktop widget while another app is in front (`.vibrant`),
+    /// which is when it used to turn grey. Both need white text and translucent shapes, not pastel fills.
+    private var isMonochrome: Bool {
+        renderingMode != .fullColor
+    }
+
     /// The Automatic style follows macOS: the Light look in light mode, the Dark look in dark mode.
     private var theme: WidgetTheme {
         guard entry.followsSystemAppearance else { return entry.theme }
@@ -222,7 +227,7 @@ struct MonthWidgetEntryView: View {
                                  events: entry.events,
                                  theme: theme,
                                  message: entry.message,
-                                 isAccented: renderingMode == .accented) {
+                                 isAccented: isMonochrome) {
                     monthButtons
                 }
             } else {
@@ -232,7 +237,7 @@ struct MonthWidgetEntryView: View {
                                   theme: theme,
                                   isLarge: true,
                                   message: entry.message,
-                                  isAccented: renderingMode == .accented) {
+                                  isAccented: isMonochrome) {
                     monthButtons
                 }
             }
