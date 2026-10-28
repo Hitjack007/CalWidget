@@ -9,16 +9,18 @@
     <!-- release.sh adds a new <item> block here for each release. -->
 
 
+
+
     <item>
       <title>Version 27.0</title>
-      <pubDate>Tue, 27 Oct 2026 04:26:19 +0000</pubDate>
-      <sparkle:version>202610271724</sparkle:version>
+      <pubDate>Wed, 28 Oct 2026 02:11:07 +0000</pubDate>
+      <sparkle:version>202610281510</sparkle:version>
       <sparkle:shortVersionString>27.0</sparkle:shortVersionString>
       <sparkle:minimumSystemVersion>26.0</sparkle:minimumSystemVersion>
       <enclosure
         url="https://github.com/Hitjack007/CalWidget/releases/download/v27.0/CalWidget-27.0.dmg"
-        sparkle:edSignature="GEEdj1dkXsg6q/f7ictn7KBV1qFNwLPbzOVQJITw7zDImCFZuFRX8pK9LWFbZ7JiRThx4iHEQye62FtkLM2CCg=="
-        length="3433098"
+        sparkle:edSignature="hnI+yIbra4cGBOXFWf3bUtfucY/UiRByWbGv7RtjRY04bnmGQ67V+rc4qGlB64YasNguTq+pkI/J511AwKCYCw=="
+        length="3435815"
         type="application/octet-stream"/>
     </item>
 
