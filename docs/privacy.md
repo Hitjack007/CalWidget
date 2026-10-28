@@ -25,7 +25,7 @@ Calendar data is used only to display events in the widget and in the app's wind
 
 - Your Mac talks **directly to Google's servers**. There is no server run by us in between.
 - Event data is cached locally on your Mac, in a container shared between the app and its widget, so the widget can display it.
-- Your Google sign-in tokens are stored in the macOS Keychain.
+- Your Google sign-in tokens are stored in a file in `~/Library/Application Support/CalWidget` that only your macOS user account can read.
 - We run no analytics, advertising, crash reporting, or tracking of any kind.
 - We don't sell, share, or transfer your data to anyone. We don't receive it in the first place.
 

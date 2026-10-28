@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>AppGroupIdentifier</key>
-	<string>$(TeamIdentifierPrefix)com.hitjack007.calwidget</string>
 	<key>LSUIElement</key>
 	<true/>
 	<key>SUEnableAutomaticChecks</key>
@@ -14,7 +12,5 @@
 	<string>https://hitjack007.github.io/CalWidget/appcast.xml</string>
 	<key>SUPublicEDKey</key>
 	<string>6xY6JsEkEG2HPn7hPwS457+wIYZ96Yc7NLR88xZsFPg=</string>
-	<key>KeychainAccessGroup</key>
-	<string>$(AppIdentifierPrefix)com.hitjack007.calwidget</string>
 </dict>
 </plist>

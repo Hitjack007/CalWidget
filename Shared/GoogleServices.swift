@@ -35,18 +35,18 @@ nonisolated enum TokenStore {
     private static let account = "google-oauth-tokens"
 
     static func load() -> TokenSet? {
-        guard let data = KeychainStore.load(account: account) else { return nil }
+        guard let data = CredentialStore.load(account: account) else { return nil }
         return try? JSONDecoder().decode(TokenSet.self, from: data)
     }
 
     @discardableResult
     static func save(_ tokens: TokenSet) -> Bool {
         guard let data = try? JSONEncoder().encode(tokens) else { return false }
-        return KeychainStore.save(data, account: account)
+        return CredentialStore.save(data, account: account)
     }
 
     static func clear() {
-        KeychainStore.delete(account: account)
+        CredentialStore.delete(account: account)
     }
 }
 

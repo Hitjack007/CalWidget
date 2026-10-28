@@ -146,6 +146,24 @@ if [ -z "$APP_PATH" ]; then
 fi
 echo "  App: $APP_PATH"
 
+# ── Signing check ────────────────────────────────────────────────────────────
+# A free Apple ID can't make a provisioning profile that works on other Macs. If the build embeds one,
+# or claims an entitlement that needs one, macOS refuses to launch the app anywhere but this Mac.
+
+echo ""
+echo "→ Checking the build doesn't need a provisioning profile..."
+for BUNDLE in "$APP_PATH" "$APP_PATH"/Contents/PlugIns/*.appex; do
+    if [ -e "$BUNDLE/Contents/embedded.provisionprofile" ]; then
+        echo "Error: $BUNDLE embeds a provisioning profile, so it won't launch on other Macs."
+        exit 1
+    fi
+    if codesign -d --entitlements - "$BUNDLE" 2>/dev/null | grep -qE "application-groups|keychain-access-groups|com.apple.developer"; then
+        echo "Error: $BUNDLE claims an entitlement that needs a provisioning profile."
+        exit 1
+    fi
+done
+echo "  No profile or restricted entitlements"
+
 # ── DMG ──────────────────────────────────────────────────────────────────────
 
 echo ""

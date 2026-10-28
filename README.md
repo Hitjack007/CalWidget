@@ -54,7 +54,7 @@ The widget refreshes in the background and shows the current month.
 
 ## Privacy
 
-The app asks for one permission, `https://www.googleapis.com/auth/calendar.readonly`, and can't create, edit, or delete events. It keeps only each calendar's name and color and each event's title, times, and all-day flag. Data is cached on your Mac and sign-in tokens are kept in the Keychain. Nothing is sent to us or anyone else, and there are no analytics. Full details are in the [Privacy Policy](https://gcalwidget.marksstuff.com/privacy).
+The app asks for one permission, `https://www.googleapis.com/auth/calendar.readonly`, and can't create, edit, or delete events. It keeps only each calendar's name and color and each event's title, times, and all-day flag. Data is cached on your Mac and sign-in tokens are kept in a file in `~/Library/Application Support/CalWidget` that only your user account can read. Nothing is sent to us or anyone else, and there are no analytics. Full details are in the [Privacy Policy](https://gcalwidget.marksstuff.com/privacy).
 
 ---
 
@@ -75,7 +75,7 @@ cd CalWidget
 open CalWidget.xcodeproj
 ```
 
-1. For both targets (`googleCalendarWidget` and `MonthWidgetExtension`), choose your team under **Signing & Capabilities**. The app and widget share data through an App Group and a Keychain access group that are prefixed with your team ID.
+1. For both targets (`googleCalendarWidget` and `MonthWidgetExtension`), choose your team under **Signing & Capabilities**. The app and widget share data through files in `~/Library/Application Support/CalWidget`, so no App Group or provisioning profile is needed.
 2. Copy `Config/GoogleSecrets.swift.example` to `Shared/GoogleSecrets.swift` and fill in the OAuth client secret. That file is git-ignored, so it never gets committed. To use your own Google client instead, create a **Desktop app** client in the Google Cloud Console and set `clientID` in `Shared/GoogleConfig.swift`.
 3. Run the `googleCalendarWidget` scheme with **Cmd + R**, then sign in with Google like any other user.
 

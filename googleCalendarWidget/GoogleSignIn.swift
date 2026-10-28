@@ -89,7 +89,7 @@ enum SignInError: LocalizedError {
         case .denied(let reason): "Google didn't allow sign-in (\(reason))."
         case .couldNotOpenBrowser: "Couldn't open your web browser to sign in."
         case .timedOut: "Sign-in took too long and was stopped. Try again."
-        case .keychainFailed: "Signed in, but the sign-in couldn't be saved to the Keychain."
+        case .keychainFailed: "Signed in, but the sign-in couldn't be saved."
         }
     }
 }

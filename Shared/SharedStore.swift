@@ -4,26 +4,73 @@
 //
 
 import Foundation
-import Security
 
-/// Identifiers injected into each target's Info.plist from the team prefix, so the project works under any developer team.
-nonisolated enum AppGroup {
-    static var identifier: String? {
-        Bundle.main.object(forInfoDictionaryKey: "AppGroupIdentifier") as? String
+/// A small property-list file in the user's real home folder, shared by the app and the widget.
+///
+/// An App Group would need a provisioning profile, and a profile is only valid on the Macs registered
+/// to the developer account, so builds signed with a free Apple ID would refuse to launch anywhere else.
+/// The app is unsandboxed and the widget reaches this folder through a
+/// `files.home-relative-path.read-write` temporary exception, and neither needs a profile.
+nonisolated final class SharedFile: @unchecked Sendable {
+    /// The folder both processes use. Relative to the real home, which is not the widget's sandbox container.
+    static let folderPath = "/Library/Application Support/CalWidget/"
+
+    private let fileURL: URL
+    private let lockPath: String
+    private let lock = NSLock()
+
+    init(name: String) {
+        // NSHomeDirectory() is the container inside the widget's sandbox, so ask the user database instead.
+        let home = getpwuid(getuid()).flatMap { String(validatingCString: $0.pointee.pw_dir) } ?? NSHomeDirectory()
+        let folder = URL(fileURLWithPath: home + Self.folderPath, isDirectory: true)
+        try? FileManager.default.createDirectory(at: folder, withIntermediateDirectories: true,
+                                                 attributes: [.posixPermissions: 0o700])
+        fileURL = folder.appendingPathComponent(name + ".plist")
+        lockPath = folder.appendingPathComponent(name + ".lock").path
     }
 
-    static var keychainGroup: String? {
-        Bundle.main.object(forInfoDictionaryKey: "KeychainAccessGroup") as? String
+    /// Runs `body` while holding a lock that spans both processes, so a write in one can't be lost to the other.
+    private func withLock<T>(_ body: () -> T) -> T {
+        lock.lock()
+        defer { lock.unlock() }
+        let descriptor = open(lockPath, O_CREAT | O_RDWR, 0o600)
+        if descriptor >= 0 { flock(descriptor, LOCK_EX) }
+        defer { if descriptor >= 0 { flock(descriptor, LOCK_UN); close(descriptor) } }
+        return body()
     }
 
-    static var defaults: UserDefaults {
-        identifier.flatMap { UserDefaults(suiteName: $0) } ?? .standard
+    private func load() -> [String: Any] {
+        guard let data = try? Data(contentsOf: fileURL),
+              let plist = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String: Any]
+        else { return [:] }
+        return plist
     }
+
+    private func store(_ values: [String: Any]) {
+        guard let data = try? PropertyListSerialization.data(fromPropertyList: values, format: .binary, options: 0) else { return }
+        try? data.write(to: fileURL, options: .atomic)
+        try? FileManager.default.setAttributes([.posixPermissions: 0o600], ofItemAtPath: fileURL.path)
+    }
+
+    func object(forKey key: String) -> Any? { withLock { load()[key] } }
+    func data(forKey key: String) -> Data? { object(forKey: key) as? Data }
+    func bool(forKey key: String) -> Bool { object(forKey: key) as? Bool ?? false }
+    func integer(forKey key: String) -> Int { object(forKey: key) as? Int ?? 0 }
+
+    func set(_ value: Any?, forKey key: String) {
+        withLock {
+            var values = load()
+            values[key] = value
+            store(values)
+        }
+    }
+
+    func removeObject(forKey key: String) { set(nil, forKey: key) }
 }
 
-/// Settings and cached data shared by the app and the widget through the App Group.
+/// Settings and cached data shared by the app and the widget through a file in the user's home folder.
 nonisolated enum SharedStore {
-    private static var defaults: UserDefaults { AppGroup.defaults }
+    private static let defaults = SharedFile(name: "shared")
 
     private static func read<T: Decodable>(_ type: T.Type, key: String) -> T? {
         guard let data = defaults.data(forKey: key) else { return nil }
@@ -137,42 +184,22 @@ nonisolated enum SharedStore {
     }
 }
 
-/// Thin wrapper over the data-protection keychain, shared by the app and widget through a keychain access group.
-nonisolated enum KeychainStore {
-    private static let service = "com.hitjack007.calwidget"
-
-    private static func baseQuery(account: String) -> [String: Any] {
-        var query: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrService as String: service,
-            kSecAttrAccount as String: account,
-            kSecUseDataProtectionKeychain as String: true
-        ]
-        if let group = AppGroup.keychainGroup {
-            query[kSecAttrAccessGroup as String] = group
-        }
-        return query
-    }
+/// OAuth tokens shared by the app and the widget. They live in a file only the user can read, because a keychain
+/// access group would need a provisioning profile, which a build signed with a free Apple ID can't carry to other Macs.
+nonisolated enum CredentialStore {
+    private static let file = SharedFile(name: "credentials")
 
     @discardableResult
     static func save(_ data: Data, account: String) -> Bool {
-        SecItemDelete(baseQuery(account: account) as CFDictionary)
-        var query = baseQuery(account: account)
-        query[kSecValueData as String] = data
-        query[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-        return SecItemAdd(query as CFDictionary, nil) == errSecSuccess
+        file.set(data, forKey: account)
+        return file.data(forKey: account) == data
     }
 
     static func load(account: String) -> Data? {
-        var query = baseQuery(account: account)
-        query[kSecReturnData as String] = true
-        query[kSecMatchLimit as String] = kSecMatchLimitOne
-        var result: AnyObject?
-        guard SecItemCopyMatching(query as CFDictionary, &result) == errSecSuccess else { return nil }
-        return result as? Data
+        file.data(forKey: account)
     }
 
     static func delete(account: String) {
-        SecItemDelete(baseQuery(account: account) as CFDictionary)
+        file.removeObject(forKey: account)
     }
 }
