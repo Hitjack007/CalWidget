@@ -14,7 +14,6 @@ export const app = {
   email: 'mark@gcalwidget.marksstuff.com',
   supportEmail: 'support@gcalwidget.marksstuff.com',
   legalEmail: 'legal@gcalwidget.marksstuff.com',
-  discord: 'hitjack007',
   author: { name: 'Mark Greene', url: 'https://marksstuff.com' },
 };
 

@@ -32,16 +32,6 @@ import { app } from '../data/site';
           </div>
           <a class="btn" href={`mailto:${app.supportEmail}`}>{app.supportEmail}</a>
         </li>
-        <li class="card help-card">
-          <span class="help-icon"><Icon name="chat" size={18} /></span>
-          <div>
-            <h3>Discord</h3>
-            <p>Send a message to <strong>{app.discord}</strong>.</p>
-          </div>
-          <button type="button" class="btn" data-copy={app.discord}>
-            <Icon name="copy" size={16} /> <span class="copy-text">Copy username</span>
-          </button>
-        </li>
       </ul>
       <p class="muted note">This is a free, spare-time project, so replies may take a day or two.</p>
     </section>
@@ -197,9 +187,6 @@ import { app } from '../data/site';
 
   .help-card .btn {
     max-width: 100%;
-    cursor: pointer;
-    font-family: inherit;
-    color: inherit;
     overflow-wrap: anywhere;
   }
 
@@ -315,20 +302,4 @@ import { app } from '../data/site';
   };
   openFromHash();
   window.addEventListener('hashchange', openFromHash);
-
-  // Discord username copy button (the command boxes have their own script).
-  document.querySelectorAll<HTMLButtonElement>('.help-card button[data-copy]').forEach(button => {
-    const text = button.querySelector('.copy-text');
-    button.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(button.dataset.copy ?? '');
-      } catch {
-        return;
-      }
-      if (text) {
-        text.textContent = 'Copied';
-        setTimeout(() => (text.textContent = 'Copy username'), 1800);
-      }
-    });
-  });
 </script>
