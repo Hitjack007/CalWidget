@@ -1,0 +1,37 @@
+name: Website preview
+
+on:
+  pull_request:
+    paths:
+      - 'website/**'
+      - '.github/workflows/website-preview.yml'
+
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
+
+defaults:
+  run:
+    working-directory: website
+
+jobs:
+  build_and_preview:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+      - run: npm run check
+      - run: npm run build
+      - uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: ${{ secrets.GITHUB_TOKEN }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_GCALWIDGET_DE3D0 }}
+          projectId: gcalwidget-de3d0
+          entryPoint: website
