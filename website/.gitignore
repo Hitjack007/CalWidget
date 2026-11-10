@@ -3,4 +3,9 @@
 firebase-debug.log*
 ui-debug.log*
 
+# Astro
+node_modules/
+dist/
+.astro/
+
 .DS_Store

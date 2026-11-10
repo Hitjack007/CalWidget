@@ -1,0 +1,107 @@
+---
+import { Image } from 'astro:assets';
+import appIcon from '../assets/app-icon.png';
+import { app } from '../data/site';
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="/" class="brand">
+          <Image src={appIcon} alt="" width={24} height={24} densities={[1, 2]} />
+          <span>{app.name}</span>
+        </a>
+        <p class="muted">A free, open-source Google Calendar widget for macOS.</p>
+        <p class="muted">Made by <a class="author" href={app.author.url}>{app.author.name}</a>.</p>
+      </div>
+
+      <nav aria-label="Footer">
+        <ul>
+          <li><a href="/privacy">Privacy Policy</a></li>
+          <li><a href="/support">Support</a></li>
+          <li><a href={app.repo} target="_blank" rel="noopener">Source code on GitHub</a></li>
+          <li><a href={`mailto:${app.email}`}>Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <p class="disclaimer">This project is not affiliated with or endorsed by Google. Google Calendar is a trademark of Google LLC.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    margin-top: var(--section);
+    border-top: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .footer-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 24px 48px;
+    padding-top: 40px;
+  }
+
+  .footer-brand {
+    display: grid;
+    gap: 6px;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    font-weight: 650;
+    font-size: 15px;
+    letter-spacing: -0.02em;
+  }
+
+  .brand img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .author {
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  nav ul {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 10px 40px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  nav a {
+    color: var(--text-2);
+    transition: color var(--dur) var(--ease);
+  }
+
+  nav a:hover,
+  .author:hover {
+    color: var(--text);
+  }
+
+  .disclaimer {
+    margin-top: 32px;
+    padding-block: 20px 32px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--text-2);
+  }
+
+  @media (max-width: 560px) {
+    nav ul {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

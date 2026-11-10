@@ -1,0 +1,344 @@
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+
+/* ─── Tokens ─────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --surface-muted: #f0f2f5;
+  --border: #e2e5ea;
+  --text: #16181d;
+  --text-2: #646a75;
+  /* The widget's own blue, so the page and the screenshots match */
+  --accent: #3d63d4;
+  --accent-hover: #3255bd;
+  --accent-soft: rgb(61 99 212 / 0.08);
+  --on-accent: #ffffff;
+  --focus: #3d63d4;
+
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --max: 1080px;
+  --narrow: 760px;
+  --gutter: 24px;
+  --header-h: 64px;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --section: 104px;
+  --ease: cubic-bezier(0.2, 0, 0, 1);
+  --dur: 200ms;
+  --shadow: 0 1px 2px rgb(16 24 40 / 0.04), 0 12px 32px -8px rgb(16 24 40 / 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #0f1115;
+    --surface: #181b21;
+    --surface-muted: #14171c;
+    --border: #2b2f37;
+    --text: #f2f4f7;
+    --text-2: #a0a6b1;
+    --accent: #9db4ff;
+    --accent-hover: #b8c9ff;
+    --accent-soft: rgb(157 180 255 / 0.1);
+    --on-accent: #0f1115;
+    --focus: #9db4ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 16px 40px -12px rgb(0 0 0 / 0.6);
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --gutter: 20px;
+    --header-h: 56px;
+    --section: 64px;
+    --radius: 14px;
+  }
+}
+
+/* ─── Base ───────────────────────────────────────────────────────────────── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--header-h) + 20px);
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  padding: 0.15em 0.4em;
+  border-radius: 6px;
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  overflow-wrap: anywhere;
+}
+
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+/* ─── Layout primitives ──────────────────────────────────────────────────── */
+
+.container {
+  width: 100%;
+  max-width: calc(var(--max) + var(--gutter) * 2);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+.container.narrow {
+  max-width: calc(var(--narrow) + var(--gutter) * 2);
+}
+
+.section {
+  padding-top: var(--section);
+}
+
+.section-head {
+  max-width: 640px;
+  margin-bottom: 32px;
+}
+
+.section-head h2 {
+  margin-top: 10px;
+  font-size: clamp(28px, 3.4vw, 36px);
+  letter-spacing: -0.03em;
+}
+
+.section-head p {
+  margin-top: 12px;
+  font-size: 18px;
+  color: var(--text-2);
+}
+
+.page-head {
+  padding: 72px 0 40px;
+}
+
+.page-head h1 {
+  font-size: clamp(36px, 5vw, 52px);
+  letter-spacing: -0.035em;
+}
+
+.page-head .lede {
+  margin-top: 12px;
+  font-size: 18px;
+  color: var(--text-2);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.eyebrow.accent {
+  color: var(--accent);
+}
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--text-2);
+}
+
+.muted {
+  color: var(--text-2);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ─── Shared components ──────────────────────────────────────────────────── */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding-inline: 20px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+
+.btn:hover {
+  border-color: var(--text-2);
+}
+
+.btn-primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+}
+
+.btn-primary:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.callout {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  background: var(--accent-soft);
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+}
+
+.callout svg {
+  flex: none;
+  margin-top: 3px;
+  color: var(--accent);
+}
+
+.prose {
+  max-width: 68ch;
+}
+
+.prose > * + * {
+  margin-top: 1em;
+}
+
+.prose h2 {
+  margin-top: 2.2em;
+  font-size: 24px;
+}
+
+.prose h2 + * {
+  margin-top: 0.75em;
+}
+
+.prose p,
+.prose li {
+  color: color-mix(in srgb, var(--text) 85%, var(--text-2));
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.2em;
+}
+
+.prose li + li {
+  margin-top: 0.5em;
+}
+
+.prose li::marker {
+  color: var(--text-2);
+}
+
+.prose strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.prose a {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 720px) {
+  .page-head {
+    padding: 40px 0 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}

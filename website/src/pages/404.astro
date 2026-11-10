@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base title="Page not found · CalWidget" description="That page doesn't exist.">
+  <div class="container nf">
+    <p class="code" aria-hidden="true">404</p>
+    <h1>Page not found</h1>
+    <p class="muted">That page doesn't exist.</p>
+    <div class="actions">
+      <a class="btn btn-primary" href="/">Go to the home page</a>
+      <a class="btn" href="/support">Support <Icon name="arrow-right" size={15} /></a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .nf {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding-block: 64px;
+    text-align: center;
+  }
+
+  .code {
+    font-family: var(--font-mono);
+    font-size: clamp(72px, 12vw, 128px);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--border);
+  }
+
+  h1 {
+    font-size: clamp(30px, 4vw, 44px);
+    letter-spacing: -0.03em;
+  }
+
+  .actions {
+    justify-content: center;
+    margin-top: 8px;
+  }
+</style>

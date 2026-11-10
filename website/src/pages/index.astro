@@ -1,0 +1,496 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CopyCommand from '../components/CopyCommand.astro';
+import widgetLight from '../assets/widget-light.png';
+import widgetDark from '../assets/widget-dark.png';
+import { app } from '../data/site';
+
+// Screenshots of the Extra Large widget, cut out with transparent corners.
+const shot = async (src: typeof widgetLight) => {
+  const sizes = await Promise.all([480, src.width].map(width => getImage({ src, width, format: 'webp' })));
+  return sizes.map(s => `${s.src} ${s.attributes.width}w`).join(', ');
+};
+const lightSrcset = await shot(widgetLight);
+const darkSrcset = await shot(widgetDark);
+const fallback = await getImage({ src: widgetLight, width: 480, format: 'png' });
+
+const features = [
+  { icon: 'grid', title: 'Month grid', text: 'Event chips in each day, including events that span several days.' },
+  { icon: 'palette', title: 'Your calendar colors', text: 'Reads directly from Google Calendar and keeps the colors you chose.' },
+  { icon: 'sizes', title: 'Three sizes', text: 'Medium (a mini month with event dots and a “coming up” list), Large and Extra Large.' },
+  { icon: 'pointer', title: 'Click to open', text: 'Click an event to open it in Google Calendar.' },
+  { icon: 'plus', title: 'Month arrows and +', text: 'Browse months from the widget. The + button opens Google Calendar so you can add an event.' },
+  { icon: 'sliders', title: 'Per-widget style', text: 'Automatic, Light or Dark, plus which calendars each widget shows, from Edit Widget.' },
+  { icon: 'sparkle', title: 'Liquid Glass', text: 'Works with the macOS Clear and Tinted widget styles.' },
+  { icon: 'refresh', title: 'Automatic updates', text: 'Updates itself with Sparkle, and shows what’s new after each update.' },
+  { icon: 'lock', title: 'Private', text: 'No account on our side and no tracking. Your data goes only between your Mac and Google.' },
+] as const;
+---
+
+<Base
+  title="CalWidget: a month view of your Google Calendar on macOS"
+  description="CalWidget is a free, open-source macOS widget that shows a full month view of your Google Calendar in Notification Center or on your desktop."
+>
+  <section class="container hero">
+    <div class="hero-copy">
+      <p class="eyebrow accent">Free and open source · macOS</p>
+      <h1>{app.tagline}</h1>
+      <p class="lede">
+        A native macOS widget that shows a full month view of your Google Calendar, right in Notification Center or on
+        your desktop. It reads Google Calendar directly, so it doesn't depend on syncing through Apple Calendar.
+      </p>
+      <div class="actions">
+        <a class="btn btn-primary" href={app.download}><Icon name="download" size={16} /> Download for Mac</a>
+        <a class="btn" href="/support">Setup &amp; support</a>
+      </div>
+      <p class="hero-note muted">
+        Requires {app.requirements}. Or <a href="#install">install with Homebrew</a>.
+      </p>
+    </div>
+
+    <div class="hero-visual">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset={darkSrcset} sizes="(max-width: 960px) 92vw, 520px" />
+        <source srcset={lightSrcset} sizes="(max-width: 960px) 92vw, 520px" />
+        <img
+          src={fallback.src}
+          width={widgetLight.width}
+          height={widgetLight.height}
+          alt="The Extra Large CalWidget widget showing a month of Google Calendar events, with today highlighted and a multi-day event spanning the week."
+          loading="eager"
+          fetchpriority="high"
+        />
+      </picture>
+    </div>
+  </section>
+
+  <section class="container section" id="features" aria-labelledby="features-title">
+    <div class="section-head">
+      <p class="eyebrow">Features</p>
+      <h2 id="features-title">Everything a calendar widget should do</h2>
+    </div>
+    <ul class="features">
+      {features.map(f => (
+        <li class="card">
+          <span class="feature-icon"><Icon name={f.icon} size={18} /></span>
+          <h3>{f.title}</h3>
+          <p>{f.text}</p>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  <section class="container section" id="install" aria-labelledby="install-title">
+    <div class="section-head">
+      <p class="eyebrow">Install</p>
+      <h2 id="install-title">Get CalWidget</h2>
+      <p>Requires {app.requirements} and a Google account.</p>
+    </div>
+
+    <div class="install">
+      <article class="card install-card">
+        <div class="install-head">
+          <span class="feature-icon"><Icon name="download" size={18} /></span>
+          <h3>Download</h3>
+        </div>
+        <ol class="steps">
+          <li>
+            Download the latest <strong>CalWidget.dmg</strong> from GitHub.
+            <a class="btn btn-primary step-btn" href={app.download}><Icon name="download" size={16} /> Download CalWidget.dmg</a>
+          </li>
+          <li>Open the DMG and drag <strong>CalWidget</strong> to your Applications folder.</li>
+          <li>
+            Before opening, run this once in Terminal to clear the macOS security warning:
+            <CopyCommand command={app.unquarantine} label="Copy the Terminal command" />
+          </li>
+          <li>Open the app and click <strong>Sign in with Google</strong>, then allow read-only access to your calendar.</li>
+          <li>Add the widget from Edit Widgets in Notification Center or on the desktop.</li>
+        </ol>
+      </article>
+
+      <article class="card install-card">
+        <div class="install-head">
+          <span class="feature-icon"><Icon name="terminal" size={18} /></span>
+          <h3>Homebrew</h3>
+        </div>
+        <p class="muted">If you use <a class="inline" href="https://brew.sh" target="_blank" rel="noopener">Homebrew</a>, one command installs CalWidget and skips the security warning.</p>
+        <CopyCommand command={app.brew} label="Copy the Homebrew command" />
+        <p class="muted">Then open the app, sign in with Google and add the widget.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="how-title">
+    <div class="section-head">
+      <p class="eyebrow">How it works</p>
+      <h2 id="how-title">Sign in once, then just look</h2>
+    </div>
+    <ol class="how">
+      <li class="card"><span class="step-num">1</span><p>Open the app and sign in with your Google account.</p></li>
+      <li class="card"><span class="step-num">2</span><p>Add the widget from Edit Widgets in Notification Center or on the desktop.</p></li>
+      <li class="card"><span class="step-num">3</span><p>The widget refreshes in the background and shows the current month.</p></li>
+    </ol>
+    <div class="callout">
+      <Icon name="shield" size={20} />
+      <p>The app asks only for <strong>read-only</strong> access to your calendar. It can't create, edit, or delete events.</p>
+    </div>
+  </section>
+
+  <section class="container section" id="google-data" aria-labelledby="google-data-title">
+    <div class="card data-card">
+      <div class="data-intro">
+        <p class="eyebrow">Your data</p>
+        <h2 id="google-data-title">Why the app needs access to your Google Calendar</h2>
+        <p>
+          The widget's only job is to show your Google Calendar events in a month grid on your Mac. To do that, it asks
+          Google for one permission, <code>https://www.googleapis.com/auth/calendar.readonly</code>, which lets it:
+        </p>
+      </div>
+      <ul class="data-list">
+        <li><strong>Read your list of calendars</strong>, with their names and colors, so you can choose which ones to show and each event appears in its calendar's color.</li>
+        <li><strong>Read the events in those calendars</strong> (title, date and time) for the month on screen, so they can be drawn in the grid.</li>
+      </ul>
+      <p class="data-outro">
+        This data is used only to display your calendar on your own Mac. It goes straight from Google to your Mac and is
+        never sent to us or anyone else. It isn't used for advertising or to train AI models. The full details are in
+        the <a class="inline" href="/privacy">Privacy Policy</a>.
+      </p>
+    </div>
+  </section>
+
+  <section class="container section" aria-labelledby="license-title">
+    <div class="cta">
+      <h2 id="license-title">Free and open source</h2>
+      <p class="muted">Open source. See the <a class="inline" href={app.repo}>repository</a> for license details.</p>
+      <div class="actions">
+        <a class="btn btn-primary" href={app.download}><Icon name="download" size={16} /> Download for Mac</a>
+        <a class="btn" href={app.repo} target="_blank" rel="noopener"><Icon name="github" size={16} /> Source on GitHub</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* Hero */
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 520px);
+    align-items: center;
+    gap: 56px;
+    padding-top: 72px;
+  }
+
+  .hero h1 {
+    margin-top: 16px;
+    font-size: clamp(38px, 5.2vw, 58px);
+    letter-spacing: -0.04em;
+  }
+
+  .lede {
+    margin-top: 20px;
+    font-size: 18.5px;
+    color: var(--text-2);
+  }
+
+  .hero .actions {
+    margin-top: 28px;
+  }
+
+  .hero-note {
+    margin-top: 16px;
+    font-size: 14px;
+  }
+
+  .hero-note a,
+  .inline {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
+
+  .hero-visual {
+    position: relative;
+    padding: clamp(20px, 4vw, 40px);
+    border-radius: calc(var(--radius) + 12px);
+    border: 1px solid var(--border);
+    background:
+      radial-gradient(120% 90% at 15% 10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 60%),
+      radial-gradient(100% 80% at 90% 100%, color-mix(in srgb, #e3a2b4 30%, transparent), transparent 60%),
+      var(--surface-muted);
+  }
+
+  .hero-visual img {
+    width: 100%;
+    filter: drop-shadow(0 18px 36px rgb(16 24 40 / 0.22)) drop-shadow(0 2px 4px rgb(16 24 40 / 0.08));
+  }
+
+  /* Features */
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .features li {
+    padding: 22px;
+  }
+
+  .features h3 {
+    margin-top: 16px;
+    font-size: 17px;
+  }
+
+  .features p {
+    margin-top: 6px;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+
+  .feature-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  /* Install */
+
+  .install {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 14px;
+    align-items: start;
+  }
+
+  .install-card {
+    display: grid;
+    gap: 16px;
+    padding: 26px;
+  }
+
+  .install-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .install-head h3 {
+    font-size: 20px;
+  }
+
+  .steps {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+  }
+
+  .steps li {
+    position: relative;
+    padding-left: 38px;
+    color: color-mix(in srgb, var(--text) 85%, var(--text-2));
+    counter-increment: step;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0;
+    top: 1px;
+    display: grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--surface-muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-2);
+  }
+
+  .steps strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .step-btn {
+    display: flex;
+    width: fit-content;
+    margin-top: 10px;
+  }
+
+  .steps li :global(.cmd) {
+    margin-top: 10px;
+  }
+
+  /* How it works */
+
+  .how {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0 0 14px;
+    padding: 0;
+    list-style: none;
+  }
+
+  .how li {
+    display: grid;
+    gap: 14px;
+    align-content: start;
+    padding: 22px;
+  }
+
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--accent);
+  }
+
+  .how p {
+    color: color-mix(in srgb, var(--text) 85%, var(--text-2));
+  }
+
+  /* Google data */
+
+  .data-card {
+    padding: clamp(24px, 4vw, 44px);
+  }
+
+  .data-intro {
+    max-width: 68ch;
+  }
+
+  .data-intro h2 {
+    margin-top: 10px;
+    font-size: clamp(24px, 3vw, 30px);
+    letter-spacing: -0.03em;
+  }
+
+  .data-intro p:last-child {
+    margin-top: 16px;
+    color: color-mix(in srgb, var(--text) 85%, var(--text-2));
+  }
+
+  .data-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    margin: 24px 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .data-list li {
+    padding: 18px 20px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+    color: var(--text-2);
+  }
+
+  .data-list strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .data-outro {
+    max-width: 68ch;
+    color: color-mix(in srgb, var(--text) 85%, var(--text-2));
+  }
+
+  /* CTA */
+
+  .cta {
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    padding: 56px 24px;
+    text-align: center;
+    border-radius: calc(var(--radius) + 8px);
+    border: 1px solid var(--border);
+    background:
+      radial-gradient(80% 120% at 50% 0%, var(--accent-soft), transparent 70%),
+      var(--surface);
+  }
+
+  .cta h2 {
+    font-size: clamp(28px, 3.4vw, 36px);
+    letter-spacing: -0.03em;
+  }
+
+  .cta .actions {
+    justify-content: center;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 960px) {
+    .hero {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding-top: 48px;
+    }
+
+    .hero-visual {
+      max-width: 560px;
+    }
+
+    .features,
+    .how {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .install {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .features,
+    .how,
+    .data-list {
+      grid-template-columns: 1fr;
+    }
+
+    .install-card {
+      padding: 20px;
+    }
+
+    .features li {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      column-gap: 14px;
+      padding: 16px;
+    }
+
+    .features .feature-icon {
+      grid-row: span 2;
+    }
+
+    .features h3 {
+      margin-top: 0;
+    }
+
+    .features p {
+      margin-top: 2px;
+    }
+
+    .steps li {
+      padding-left: 34px;
+    }
+  }
+</style>
