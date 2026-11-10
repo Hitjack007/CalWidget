@@ -1,0 +1,334 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import CopyCommand from '../components/CopyCommand.astro';
+import { app } from '../data/site';
+---
+
+<Base title="Support · CalWidget" description="Help, setup steps and FAQ for CalWidget, a macOS widget for Google Calendar.">
+  <div class="container narrow">
+    <header class="page-head">
+      <p class="eyebrow">CalWidget</p>
+      <h1>Support</h1>
+      <p class="lede">Setup help, answers to common questions, and how to reach me if something isn't working.</p>
+    </header>
+
+    <section aria-labelledby="help-title">
+      <h2 id="help-title" class="block-title">Getting help</h2>
+      <ul class="help">
+        <li class="card help-card">
+          <span class="help-icon"><Icon name="bug" size={18} /></span>
+          <div>
+            <h3>Bugs and feature requests</h3>
+            <p>Open an issue on GitHub. Please include your macOS version and the app version, and describe what you expected to happen and what happened instead.</p>
+          </div>
+          <a class="btn btn-primary" href={app.newIssue} target="_blank" rel="noopener"><Icon name="github" size={16} /> Open an issue</a>
+        </li>
+        <li class="card help-card">
+          <span class="help-icon"><Icon name="mail" size={18} /></span>
+          <div>
+            <h3>Email</h3>
+            <p>For anything else, or if you'd rather not use GitHub.</p>
+          </div>
+          <a class="btn" href={`mailto:${app.supportEmail}`}>{app.supportEmail}</a>
+        </li>
+        <li class="card help-card">
+          <span class="help-icon"><Icon name="chat" size={18} /></span>
+          <div>
+            <h3>Discord</h3>
+            <p>Send a message to <strong>{app.discord}</strong>.</p>
+          </div>
+          <button type="button" class="btn" data-copy={app.discord}>
+            <Icon name="copy" size={16} /> <span class="copy-text">Copy username</span>
+          </button>
+        </li>
+      </ul>
+      <p class="muted note">This is a free, spare-time project, so replies may take a day or two.</p>
+    </section>
+
+    <section class="block" aria-labelledby="faq-title">
+      <h2 id="faq-title" class="block-title">Frequently asked questions</h2>
+
+      <div class="faq">
+        <details id="install">
+          <summary>How do I install it?<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <p>Download the latest <strong>CalWidget.dmg</strong> from the <a href={app.download}>Releases</a> page, open it and drag <strong>CalWidget</strong> to your Applications folder. If you use Homebrew, you can run this instead:</p>
+            <CopyCommand command={app.brew} label="Copy the Homebrew command" />
+            <p>See the <a href="/#install">install steps</a> on the home page for the full walkthrough.</p>
+          </div>
+        </details>
+
+        <details id="setup" open>
+          <summary>How do I set it up?<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <ol>
+              <li>Open the app and click <strong>Sign in with Google</strong>.</li>
+              <li>Choose your Google account. Google shows a screen asking you to let the app <strong>view your calendars</strong>. Click <strong>Allow</strong>.</li>
+              <li>Add the widget from Edit Widgets in Notification Center or on the desktop.</li>
+            </ol>
+            <p>That's it. There's nothing to configure in Google Cloud.</p>
+          </div>
+        </details>
+
+        <details id="security-warning">
+          <summary>macOS won't open the app or says it can't be checked<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <p>If you installed from the DMG, run this once in Terminal to clear the macOS security warning, then open the app again:</p>
+            <CopyCommand command={app.unquarantine} label="Copy the Terminal command" />
+            <p>Installing with Homebrew skips this step.</p>
+          </div>
+        </details>
+
+        <details id="requirements">
+          <summary>What do I need to run it?<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <p>{app.requirements} and a Google account.</p>
+          </div>
+        </details>
+
+        <details id="sign-in-again">
+          <summary>I'm asked to sign in again<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <p>This happens if access was removed on Google's side, for example after you revoked it at <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a> or changed your Google password. Sign in again in the app and click <strong>Allow</strong>.</p>
+          </div>
+        </details>
+
+        <details id="old-events">
+          <summary>The widget shows old or no events<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <ul>
+              <li>Open the app to confirm that you're signed in.</li>
+              <li>Widgets refresh on a schedule that macOS controls, so changes in Google Calendar can take a few minutes to appear.</li>
+              <li>Remove the widget and add it again.</li>
+            </ul>
+          </div>
+        </details>
+
+        <details id="widget-gallery">
+          <summary>The widget doesn't appear in the widget gallery<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <p>Open the app once, then check Edit Widgets again. If it's still missing, log out and back in, or restart your Mac.</p>
+          </div>
+        </details>
+
+        <details id="calendars">
+          <summary>Which calendars are shown?<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <p>Calendars you've selected in the app. You can also pick different calendars for each widget from <strong>Edit Widget</strong>. The widget uses the colors you've set in Google Calendar.</p>
+          </div>
+        </details>
+
+        <details id="change-events">
+          <summary>Can the app change my events?<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <p>No. It asks for read-only access.</p>
+          </div>
+        </details>
+
+        <details id="sign-out">
+          <summary>How do I sign out or remove access?<Icon name="chevron" size={18} class="chev" /></summary>
+          <div class="answer prose">
+            <p>Choose <strong>Sign out</strong> in the app. To also revoke access on Google's side, go to <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="block" aria-labelledby="privacy-title">
+      <a class="card privacy-link" href="/privacy">
+        <span class="help-icon"><Icon name="lock" size={18} /></span>
+        <span>
+          <span class="privacy-title" id="privacy-title">Privacy</span>
+          <span class="muted">See the Privacy Policy.</span>
+        </span>
+        <Icon name="arrow-right" size={18} class="arrow" />
+      </a>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .page-head h1 {
+    margin-top: 12px;
+  }
+
+  .block {
+    margin-top: 64px;
+  }
+
+  .block-title {
+    margin-bottom: 20px;
+    font-size: 22px;
+  }
+
+  /* Help options */
+
+  .help {
+    display: grid;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .help-card {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 22px;
+  }
+
+  .help-card h3 {
+    font-size: 17px;
+  }
+
+  .help-card p {
+    margin-top: 4px;
+    font-size: 15px;
+    color: var(--text-2);
+  }
+
+  .help-card strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .help-card .btn {
+    max-width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+    color: inherit;
+    overflow-wrap: anywhere;
+  }
+
+  .help-icon {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  .note {
+    margin-top: 14px;
+    font-size: 15px;
+  }
+
+  /* FAQ */
+
+  .faq {
+    border-top: 1px solid var(--border);
+  }
+
+  details {
+    border-bottom: 1px solid var(--border);
+  }
+
+  summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0;
+    font-weight: 500;
+    cursor: pointer;
+    list-style: none;
+    transition: color var(--dur) var(--ease);
+  }
+
+  summary::-webkit-details-marker {
+    display: none;
+  }
+
+  summary:hover {
+    color: var(--accent);
+  }
+
+  summary :global(.chev) {
+    flex: none;
+    color: var(--text-2);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  details[open] summary :global(.chev) {
+    transform: rotate(180deg);
+  }
+
+  .answer {
+    padding-bottom: 22px;
+  }
+
+  /* Privacy link */
+
+  .privacy-link {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 20px 22px;
+    transition: border-color var(--dur) var(--ease);
+  }
+
+  .privacy-link:hover {
+    border-color: var(--text-2);
+  }
+
+  .privacy-link > span:nth-child(2) {
+    display: grid;
+  }
+
+  .privacy-title {
+    font-weight: 600;
+  }
+
+  .privacy-link :global(.arrow) {
+    color: var(--text-2);
+    transition: transform var(--dur) var(--ease);
+  }
+
+  .privacy-link:hover :global(.arrow) {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 640px) {
+    .help-card {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+
+    .help-card .btn {
+      grid-column: 1 / -1;
+      justify-self: start;
+    }
+  }
+</style>
+
+<script>
+  // Open the matching question when arriving from a link like /support#setup.
+  const openFromHash = () => {
+    const target = location.hash && document.getElementById(location.hash.slice(1));
+    if (target instanceof HTMLDetailsElement) target.open = true;
+  };
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
+
+  // Discord username copy button (the command boxes have their own script).
+  document.querySelectorAll<HTMLButtonElement>('.help-card button[data-copy]').forEach(button => {
+    const text = button.querySelector('.copy-text');
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+      } catch {
+        return;
+      }
+      if (text) {
+        text.textContent = 'Copied';
+        setTimeout(() => (text.textContent = 'Copy username'), 1800);
+      }
+    });
+  });
+</script>

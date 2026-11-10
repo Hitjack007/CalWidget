@@ -1,0 +1,97 @@
+---
+import Icon from './Icon.astro';
+
+interface Props {
+  command: string;
+  label?: string;
+}
+
+const { command, label = 'Copy command' } = Astro.props;
+---
+
+<div class="cmd">
+  <code><span class="prompt" aria-hidden="true">$</span> {command}</code>
+  <button type="button" class="copy" data-copy={command} aria-label={label}>
+    <Icon name="copy" size={16} class="copy-icon" />
+    <Icon name="check" size={16} class="done-icon" />
+  </button>
+</div>
+
+<style>
+  .cmd {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px 10px 10px 14px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+  }
+
+  code {
+    flex: 1;
+    min-width: 0;
+    padding: 4px 0;
+    border: 0;
+    background: none;
+    font-size: 13.5px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+
+  .prompt {
+    color: var(--text-2);
+    user-select: none;
+  }
+
+  .copy {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-2);
+    cursor: pointer;
+    transition: color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+  }
+
+  .copy:hover {
+    color: var(--text);
+    border-color: var(--text-2);
+  }
+
+  .copy :global(.done-icon),
+  .copy.copied :global(.copy-icon) {
+    display: none;
+  }
+
+  .copy.copied :global(.done-icon) {
+    display: block;
+    color: var(--accent);
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('.cmd button[data-copy]').forEach(button => {
+    const label = button.getAttribute('aria-label') ?? 'Copy';
+    let timer: number | undefined;
+    button.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(button.dataset.copy ?? '');
+      } catch {
+        return;
+      }
+      button.classList.add('copied');
+      button.setAttribute('aria-label', 'Copied');
+      clearTimeout(timer);
+      timer = window.setTimeout(() => {
+        button.classList.remove('copied');
+        button.setAttribute('aria-label', label);
+      }, 1800);
+    });
+  });
+</script>

@@ -1,0 +1,133 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import appIcon from '../assets/app-icon.png';
+import { app, nav } from '../data/site';
+
+const path = Astro.url.pathname.replace(/\.html$/, '');
+---
+
+<header class="header">
+  <div class="container header-inner">
+    <a href="/" class="brand">
+      <Image src={appIcon} alt="" width={28} height={28} densities={[1, 2]} loading="eager" />
+      <span>{app.name}</span>
+    </a>
+
+    <nav aria-label="Main">
+      <ul>
+        {nav.map(item => (
+          <li>
+            <a href={item.href} aria-current={path === item.href ? 'page' : undefined}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="header-actions">
+      <a class="icon-btn" href={app.repo} target="_blank" rel="noopener">
+        <Icon name="github" size={18} />
+        <span class="sr-only">Source code on GitHub (opens in a new tab)</span>
+      </a>
+      <a class="btn btn-primary btn-sm" href="/#install">Download</a>
+    </div>
+  </div>
+</header>
+
+<style>
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: color-mix(in srgb, var(--bg) 86%, transparent);
+    backdrop-filter: saturate(1.4) blur(12px);
+    -webkit-backdrop-filter: saturate(1.4) blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    height: var(--header-h);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 650;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+
+  .brand img {
+    width: 28px;
+    height: 28px;
+  }
+
+  nav {
+    margin-left: auto;
+  }
+
+  nav ul {
+    display: flex;
+    gap: 24px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    font-size: 15px;
+  }
+
+  nav a {
+    color: var(--text-2);
+    transition: color var(--dur) var(--ease);
+  }
+
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--text);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: border-color var(--dur) var(--ease), background-color var(--dur) var(--ease);
+  }
+
+  .icon-btn:hover {
+    background: var(--surface-muted);
+    border-color: var(--border);
+  }
+
+  .btn-sm {
+    height: 36px;
+    padding-inline: 16px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 560px) {
+    .header-inner {
+      gap: 16px;
+    }
+
+    nav ul {
+      gap: 16px;
+    }
+
+    .btn-sm {
+      display: none;
+    }
+  }
+</style>
